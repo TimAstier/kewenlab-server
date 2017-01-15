@@ -3,7 +3,7 @@ import path from 'path';
 import Sequelize from 'sequelize';
 
 const databaseOptions = {
-  logging: console.log,
+  logging: false, // Change to console.log to log all queries in console
   pool: { maxConnections: 10, minConnections: 1 }
 };
 if (process.env.SSL_DATABASE) {

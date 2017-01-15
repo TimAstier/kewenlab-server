@@ -12,9 +12,7 @@ function validateInput(data, otherValidations) {
   let { errors } = otherValidations(data);
   return Promise.all([
     User
-      .findAll({
-        where: { email: data.email }
-      })
+      .findAll({ where: { email: data.email } })
       .then(user => {
       if (!isEmpty(user)) {
         errors.email = 'There is user with such email';
@@ -22,9 +20,7 @@ function validateInput(data, otherValidations) {
     }),
 
     User
-      .findAll({
-        where: { username: data.username }
-      })
+      .findAll({ where: { username: data.username } })
       .then(user => {
       if (!isEmpty(user)) {
         errors.username = 'There is user with such username';

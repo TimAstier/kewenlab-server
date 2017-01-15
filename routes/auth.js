@@ -1,19 +1,28 @@
 import express from 'express';
-import User from '../models/user';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import config from '../config.js';
+import isEmpty from 'lodash/isEmpty';
+
+import { user as User } from '../models';
 
 let router = express.Router();
 
 router.post('/', (req, res) => {
   const { identifier, password } = req.body;
 
-  User.query({
-    where: { username: identifier },
-    orWhere: { email: identifier }
-  }).fetch().then(user => {
-    if (user) {
+  User
+    .findAll({
+      where: {
+        $or: [
+          { username: identifier },
+          { email: identifier }
+        ]
+      }
+    })
+    .then(user => {
+    if (!isEmpty(user)) {
+      user = user[0];
       if (bcrypt.compareSync(password, user.get('password_digest'))) {
         const token = jwt.sign({
           id: user.get('id'),
