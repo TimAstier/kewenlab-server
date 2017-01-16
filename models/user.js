@@ -1,5 +1,4 @@
 export default (sequelize, DataTypes) => {
-  let models = sequelize.models;
   let User = sequelize.define('user', {
     id: {
       type: DataTypes.STRING,
