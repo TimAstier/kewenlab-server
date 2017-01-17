@@ -6,6 +6,7 @@ import { sequelize } from './models';
 import users from './routes/users';
 import auth from './routes/auth';
 import events from './routes/events';
+import texts from './routes/texts';
 
 let app = express();
 
@@ -21,5 +22,6 @@ app.use(require('forest-express-sequelize').init({
 app.use('/api/users', users);
 app.use('/api/auth', auth);
 app.use('/api/events', events);
+app.use('/api/texts', texts);
 
 app.listen(8080, () => console.log('Running on localhost:8080'));
