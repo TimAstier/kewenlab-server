@@ -7,6 +7,7 @@ let router = express.Router();
 router.get('/', (req, res) => {
   Text
     .findAll({
+      attributes: ['id', 'order', 'title'],
       order: [
         ['order', 'ASC']
       ]
