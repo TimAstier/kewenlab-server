@@ -25,4 +25,16 @@ router.get('/:id', (req, res) => {
     });
 });
 
+router.put('/:id', (req, res) => {
+  const { id, content } = req.body;
+  Text
+    .update(
+      { content },
+      { where: { id } }
+    )
+    .then(() => {
+      res.status(200).json({ success: true });
+    });
+});
+
 export default router;
