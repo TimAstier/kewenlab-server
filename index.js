@@ -19,6 +19,7 @@ app.use(require('forest-express-sequelize').init({
   sequelize
 }));
 
+// TODO: Protect the API to authenticated users only
 app.use('/api/users', users);
 app.use('/api/auth', auth);
 app.use('/api/events', events);

@@ -23,6 +23,7 @@ router.post('/', (req, res) => {
     .then(user => {
     if (!isEmpty(user)) {
       user = user[0];
+      // TODO: Check if user account is activated
       if (bcrypt.compareSync(password, user.get('password_digest'))) {
         const token = jwt.sign({
           id: user.get('id'),
