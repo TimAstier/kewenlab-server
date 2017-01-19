@@ -25,6 +25,28 @@ router.get('/:id', (req, res) => {
     });
 });
 
+router.get('/:id/chars', (req, res) => {
+  Text
+    .findOne({ where: { id: req.params.id } })
+    .then(text => {
+      text.getChars({ attributes: ['id', 'chinese'] })
+      .then(chars => {
+        res.status(200).json({ chars });
+      });
+    });
+});
+
+router.get('/:id/words', (req, res) => {
+  Text
+    .findOne({ where: { id: req.params.id } })
+    .then(text => {
+      text.getWords({ attributes: ['id', 'chinese'] })
+      .then(words => {
+        res.status(200).json({ words });
+      });
+    });
+});
+
 router.put('/:id', (req, res) => {
   const { id, content } = req.body;
   Text
