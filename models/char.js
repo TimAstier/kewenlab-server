@@ -9,7 +9,8 @@ export default (sequelize, DataTypes) => {
     },
     chinese: {
       type: DataTypes.STRING(1),
-      allowNull: false
+      allowNull: false,
+      unique: true
     }
   }, {
     timestamps: true,

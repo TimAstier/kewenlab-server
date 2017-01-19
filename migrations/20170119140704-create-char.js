@@ -10,7 +10,8 @@ module.exports = {
       },
       chinese: {
         type: Sequelize.STRING(1),
-        allowNull: false
+        allowNull: false,
+        unique: true
       },
       createdAt: {
         type: Sequelize.DATE
