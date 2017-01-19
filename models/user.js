@@ -3,7 +3,7 @@ export default (sequelize, DataTypes) => {
 
   let User = sequelize.define('user', {
     id: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true
     },

@@ -1,24 +1,24 @@
 export default (sequelize, DataTypes) => {
   let models = sequelize.models;
 
-  let Word = sequelize.define('word', {
+  let Char = sequelize.define('char', {
     id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true
     },
     chinese: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(1),
       allowNull: false
     }
   }, {
     timestamps: true,
     classMethods: {
       associate: () => {
-        Word.belongsToMany(models.text, {through: 'wordText'});
-        Word.hasMany(models.wordText);
+        Char.belongsToMany(models.text, {through: 'charText'});
+        Char.hasMany(models.charText);
       }
     }
   });
-  return Word;
+  return Char;
 };

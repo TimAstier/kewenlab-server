@@ -3,7 +3,7 @@ export default (sequelize, DataTypes) => {
 
   let Text = sequelize.define('text', {
     id: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true
     },
@@ -25,6 +25,8 @@ export default (sequelize, DataTypes) => {
       associate: () => {
         Text.belongsToMany(models.word, {through: 'wordText'});
         Text.hasMany(models.wordText);
+        Text.belongsToMany(models.char, {through: 'charText'});
+        Text.hasMany(models.charText);
       }
     }
   });
