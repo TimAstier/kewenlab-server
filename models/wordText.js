@@ -8,7 +8,13 @@ export default (sequelize, DataTypes) => {
     },
     order: {
       type: DataTypes.INTEGER
-    }
+    },
+    wordId: {
+      type: DataTypes.INTEGER
+    },
+    textId: {
+      type: DataTypes.INTEGER
+    },
   }, {
     timestamps: true,
     classMethods: {
