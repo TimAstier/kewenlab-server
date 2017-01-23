@@ -12,7 +12,8 @@ export default (sequelize, DataTypes) => {
       allowNull: false
     },
     content: {
-      type: DataTypes.TEXT
+      type: DataTypes.TEXT,
+      default: ''
     },
     order: {
       type: DataTypes.STRING,
