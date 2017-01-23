@@ -36,6 +36,9 @@ router.get('/:id/chars', (req, res) => {
           model: Text,
           where: { order: { $lt: text.order } },
           attributes: ['title', 'order'],
+          order: [
+            ['order', 'DESC']
+          ],
           required: false
         }]
       })
