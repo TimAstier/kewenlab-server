@@ -7,7 +7,6 @@ import users from './routes/users';
 import auth from './routes/auth';
 import events from './routes/events';
 import texts from './routes/texts';
-import chars from './routes/chars';
 
 let app = express();
 
@@ -25,6 +24,5 @@ app.use('/api/users', users);
 app.use('/api/auth', auth);
 app.use('/api/events', events);
 app.use('/api/texts', texts);
-app.use('/api/chars', chars);
 
 app.listen(8080, () => console.log('Running on localhost:8080'));

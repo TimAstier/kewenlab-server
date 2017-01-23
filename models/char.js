@@ -21,5 +21,6 @@ export default (sequelize, DataTypes) => {
       }
     }
   });
+
   return Char;
 };

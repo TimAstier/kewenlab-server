@@ -1,6 +1,7 @@
 import express from 'express';
 
 import { text as Text } from '../models';
+import { char as Char } from '../models';
 
 let router = express.Router();
 
@@ -29,7 +30,15 @@ router.get('/:id/chars', (req, res) => {
   Text
     .findOne({ where: { id: req.params.id } })
     .then(text => {
-      text.getChars({ attributes: ['id', 'chinese'] })
+      text.getChars({
+        attributes: ['id', 'chinese'],
+        include: [{
+          model: Text,
+          where: { order: { $lt: text.order } },
+          attributes: ['title', 'order'],
+          required: false
+        }]
+      })
       .then(chars => {
         res.status(200).json({ chars });
       });
