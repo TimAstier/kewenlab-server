@@ -7,8 +7,16 @@ module.exports = {
       charId: { type: Sequelize.INTEGER },
       textId: { type: Sequelize.INTEGER },
       order: { type: Sequelize.INTEGER },
-      createdAt: { type: Sequelize.DATE },
-      updatedAt: { type: Sequelize.DATE }
+      createdAt: {
+        type: Sequelize.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.fn('NOW')
+      },
+      updatedAt: {
+        type: Sequelize.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.fn('NOW')
+      }
     });
   },
 

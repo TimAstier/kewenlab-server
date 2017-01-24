@@ -21,10 +21,14 @@ module.exports = {
         unique: true
       },
       createdAt: {
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.fn('NOW')
       },
       updatedAt: {
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.fn('NOW')
       }
     });
   },
