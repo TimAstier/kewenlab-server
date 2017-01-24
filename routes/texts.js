@@ -60,15 +60,22 @@ router.get('/:id/words', (req, res) => {
 });
 
 router.put('/:id', (req, res) => {
-  const { id, content } = req.body;
+  const { content } = req.body;
   Text
     .update(
       { content },
-      { where: { id } }
+      { where: { id: req.params.id } }
     )
     .then(() => {
       res.status(200).json({ success: true });
     });
+});
+
+router.put('/:id/chars', (req, res) => {
+  const { newChars, charsToDelete } = req.body;
+  // BulkAdd newChars
+  // BulkDestroy charsToDeletee
+  res.json({ success: true });
 });
 
 export default router;
