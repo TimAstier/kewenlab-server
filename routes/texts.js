@@ -2,6 +2,7 @@ import express from 'express';
 
 import { text as Text } from '../models';
 import { char as Char } from '../models';
+import { charText as CharText } from '../models';
 
 let router = express.Router();
 
@@ -73,9 +74,33 @@ router.put('/:id', (req, res) => {
 
 router.put('/:id/chars', (req, res) => {
   const { newChars, charsToDelete } = req.body;
-  // BulkAdd newChars
-  // BulkDestroy charsToDeletee
-  res.json({ success: true });
+  Char
+    .findAll({
+      where: { chinese: { in: newChars.map(x => x.chinese) } }
+      // TODO: Add chars if not found
+    }).then((chars) => {
+      const charTextsToAdd = chars.map((char) => {
+        return {
+          charId: char.id,
+          textId: req.params.id
+        };
+      });
+      // BulkCreate new charTexts
+      return CharText.bulkCreate(charTextsToAdd);
+    }).then(() => {
+      // BulkDestroy charTexts
+      CharText
+      .destroy({
+        where: {
+          id: { in: charsToDelete.map(x => x.charText.id) }
+        }
+      })
+      .then((affectedRows => {
+        //console.log(affectedRows);
+        // TODO: Send back the new chars for this text
+        return res.json({ success: true });
+      }));
+    });
 });
 
 export default router;
