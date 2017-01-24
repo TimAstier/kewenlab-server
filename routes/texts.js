@@ -4,6 +4,8 @@ import { text as Text } from '../models';
 import { char as Char } from '../models';
 import { charText as CharText } from '../models';
 
+import TextService from '../services/TextService';
+
 let router = express.Router();
 
 router.get('/', (req, res) => {
@@ -28,25 +30,9 @@ router.get('/:id', (req, res) => {
 });
 
 router.get('/:id/chars', (req, res) => {
-  Text
-    .findOne({ where: { id: req.params.id } })
-    .then(text => {
-      text.getChars({
-        attributes: ['id', 'chinese'],
-        include: [{
-          model: Text,
-          where: { order: { $lt: text.order } },
-          attributes: ['title', 'order'],
-          order: [
-            ['order', 'DESC']
-          ],
-          required: false
-        }]
-      })
-      .then(chars => {
-        res.status(200).json({ chars });
-      });
-    });
+  return TextService.getChars(req.params.id).then(chars => {
+    return res.status(200).json({ chars });
+  });;
 });
 
 router.get('/:id/words', (req, res) => {
@@ -95,11 +81,11 @@ router.put('/:id/chars', (req, res) => {
           id: { in: charsToDelete.map(x => x.charText.id) }
         }
       })
-      .then((affectedRows => {
-        //console.log(affectedRows);
-        // TODO: Send back the new chars for this text
-        return res.json({ success: true });
-      }));
+      .then(() => {
+        return TextService.getChars(req.params.id).then(chars => {
+          return res.status(200).json({ chars });
+        });;
+      });
     });
 });
 
