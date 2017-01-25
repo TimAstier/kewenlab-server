@@ -11,6 +11,10 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.STRING(1),
       allowNull: false,
       unique: true
+    },
+    frequency: {
+      type: DataTypes.INTEGER,
+      unique: true
     }
   }, {
     timestamps: true,
