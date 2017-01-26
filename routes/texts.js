@@ -4,9 +4,12 @@ import isEmpty from 'lodash/isEmpty';
 import { text as Text } from '../models';
 import { char as Char } from '../models';
 import { charText as CharText } from '../models';
+import { word as Word } from '../models';
+import { wordText as WordText } from '../models';
 
 import TextService from '../services/TextService';
 import CharTextService from '../services/CharTextService';
+import WordTextService from '../services/WordTextService';
 
 let router = express.Router();
 
@@ -113,6 +116,63 @@ router.put('/:id/chars', (req, res) => {
       // Retrieve newly updated list of chars for this text:
       return TextService.getChars(req.params.id).then(chars => {
         return res.status(200).json({ chars });
+      });
+    });
+});
+
+router.put('/:id/words', (req, res) => {
+  const { newWords, wordsToDelete } = req.body;
+  let wordTextsToAdd = [];
+  // Find in DB all newWords for this text:
+  Word
+    .findAll({
+      where: { chinese: { in: newWords.map(x => x.chinese) } }
+    })
+    .then((words) => {
+      wordTextsToAdd = words.map((word) => {
+        return {
+          wordId: word.id,
+          textId: req.params.id
+        };
+      });
+      // Create notFoundWords in chars DB (if any):
+      let notFoundWords = newWords.filter((x) => {
+        return (words.map(word => word.chinese).indexOf(x.chinese) === -1);
+      });
+      if (isEmpty(notFoundWords)) {
+        return;
+      } else {
+        notFoundWords = notFoundWords.map(x => {
+          return { chinese: x.chinese };
+        });
+        return Word
+            .bulkCreate(notFoundWords, {returning: true})
+            .then((createdWords) => {
+            // Add wordTexts to wordTextsToAdd with IDs of newly created words:
+              return wordTextsToAdd = wordTextsToAdd.concat(
+                createdWords.map(x => {
+                  return { wordId: x.id, textId: req.params.id };
+                })
+              );
+            });
+      }
+    })
+    .then(() => {
+      // Create wordTexts in DB:
+      return WordText.bulkCreate(wordTextsToAdd);
+    })
+    .then(() => {
+      // Destroy wordTexts in DB:
+      if (isEmpty(wordsToDelete)) {
+        return;
+      } else {
+        return WordTextService.destroyWordsToDelete(wordsToDelete);
+      }
+    })
+    .then(() => {
+      // Retrieve newly updated list of words for this text:
+      return TextService.getWords(req.params.id).then(words => {
+        return res.status(200).json({ words });
       });
     });
 });

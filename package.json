@@ -24,6 +24,7 @@
     "forest-express-sequelize": "^0.5.4",
     "jsonwebtoken": "^7.2.1",
     "lodash": "^4.17.3",
+    "nodejieba": "^2.2.4",
     "pg": "^6.1.2",
     "sequelize": "^3.29.0",
     "shortid": "^2.2.6",
