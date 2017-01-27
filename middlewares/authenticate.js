@@ -15,13 +15,14 @@ export default (req, res, next) => {
       if (err) {
         res.status(401).json({ error: "Failed to authenticate" });
       } else {
-        // TODO: Translate this into Sequelize query
         User.findOne({
           where: { id: decoded.id },
-          attributes: ['email', 'username', 'id']
+          attributes: ['email', 'username', 'id', 'active']
         }).then(user => {
           if (!user) {
             res.status(404).json({ error: "No such user" });
+          } else if (user.active === false) {
+            res.status(403).json({ error: "Account not activated" });
           } else {
             req.currentUser = user;
             next();

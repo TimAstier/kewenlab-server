@@ -24,6 +24,11 @@ export default (sequelize, DataTypes) => {
     password_digest: {
       type: DataTypes.STRING,
       allowNull: false
+    },
+    active: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      default: false
     }
   }, {
     timestamps: true,

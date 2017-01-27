@@ -55,10 +55,11 @@ router.post('/', (req, res) => {
   validateInput(req.body, commonValidations).then(({ errors, isValid }) => {
     if (isValid) {
       const { username, email, password, timezone } = req.body;
+      const active = false;
       const password_digest = bcrypt.hashSync(password, 10);
 
       User.create({
-        username, timezone, email, password_digest
+        username, timezone, email, password_digest, active
       })
       .then(user => res.json({ success: true }))
       .catch(err => res.status(500).json({ error: err }));
