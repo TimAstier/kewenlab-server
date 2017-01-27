@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import config from '../config';
-import User from '../models/user';
+import { user as User } from '../models';
 
 export default (req, res, next) => {
   const authorizationHeader = req.headers['authorization'];
@@ -15,10 +15,11 @@ export default (req, res, next) => {
       if (err) {
         res.status(401).json({ error: "Failed to authenticate" });
       } else {
-        User.query({
+        // TODO: Translate this into Sequelize query
+        User.findOne({
           where: { id: decoded.id },
-          select: ['email', 'username', 'id']
-        }).fetch().then(user => {
+          attributes: ['email', 'username', 'id']
+        }).then(user => {
           if (!user) {
             res.status(404).json({ error: "No such user" });
           } else {

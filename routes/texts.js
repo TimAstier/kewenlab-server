@@ -1,4 +1,5 @@
 import express from 'express';
+import authenticate from '../middlewares/authenticate.js';
 import isEmpty from 'lodash/isEmpty';
 
 import { text as Text } from '../models';
@@ -13,7 +14,7 @@ import WordTextService from '../services/WordTextService';
 
 let router = express.Router();
 
-router.get('/', (req, res) => {
+router.get('/', authenticate, (req, res) => {
   Text
     .findAll({
       attributes: ['id', 'order', 'title'],
@@ -26,7 +27,7 @@ router.get('/', (req, res) => {
     });
 });
 
-router.get('/:id', (req, res) => {
+router.get('/:id', authenticate, (req, res) => {
   Text
     .findOne({ where: { id: req.params.id } })
     .then(text => {
@@ -34,19 +35,19 @@ router.get('/:id', (req, res) => {
     });
 });
 
-router.get('/:id/chars', (req, res) => {
+router.get('/:id/chars', authenticate, (req, res) => {
   return TextService.getChars(req.params.id).then(chars => {
     return res.status(200).json({ chars });
   });
 });
 
-router.get('/:id/words', (req, res) => {
+router.get('/:id/words', authenticate, (req, res) => {
   return TextService.getWords(req.params.id).then(words => {
     return res.status(200).json({ words });
   });
 });
 
-router.put('/:id', (req, res) => {
+router.put('/:id', authenticate, (req, res) => {
   const { content } = req.body;
   Text
     .update(
@@ -58,7 +59,7 @@ router.put('/:id', (req, res) => {
     });
 });
 
-router.put('/:id/chars', (req, res) => {
+router.put('/:id/chars', authenticate, (req, res) => {
   const { newChars, charsToDelete } = req.body;
   let charTextsToAdd = [];
   // Find in DB all newChars for this text:
@@ -115,7 +116,7 @@ router.put('/:id/chars', (req, res) => {
     });
 });
 
-router.put('/:id/words', (req, res) => {
+router.put('/:id/words', authenticate, (req, res) => {
   const { newWords, wordsToDelete } = req.body;
   let wordTextsToAdd = [];
   // Find in DB all newWords for this text:

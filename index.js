@@ -5,7 +5,6 @@ import bodyParser from 'body-parser';
 import { sequelize } from './models';
 import users from './routes/users';
 import auth from './routes/auth';
-import events from './routes/events';
 import texts from './routes/texts';
 import tokenizer from './routes/tokenizer';
 
@@ -23,7 +22,6 @@ app.use(require('forest-express-sequelize').init({
 // TODO: Protect the API to authenticated users only
 app.use('/api/users', users);
 app.use('/api/auth', auth);
-app.use('/api/events', events);
 app.use('/api/texts', texts);
 app.use('/api/tokenizer', tokenizer);
 
