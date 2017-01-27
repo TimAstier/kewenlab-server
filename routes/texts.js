@@ -37,18 +37,13 @@ router.get('/:id', (req, res) => {
 router.get('/:id/chars', (req, res) => {
   return TextService.getChars(req.params.id).then(chars => {
     return res.status(200).json({ chars });
-  });;
+  });
 });
 
 router.get('/:id/words', (req, res) => {
-  Text
-    .findOne({ where: { id: req.params.id } })
-    .then(text => {
-      text.getWords({ attributes: ['id', 'chinese'] })
-      .then(words => {
-        res.status(200).json({ words });
-      });
-    });
+  return TextService.getWords(req.params.id).then(words => {
+    return res.status(200).json({ words });
+  });
 });
 
 router.put('/:id', (req, res) => {
