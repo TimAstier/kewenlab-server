@@ -1,7 +1,6 @@
 import express from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import config from '../config.js';
 import isEmpty from 'lodash/isEmpty';
 
 import { user as User } from '../models';
@@ -31,7 +30,7 @@ router.post('/', (req, res) => {
         const token = jwt.sign({
           id: user.get('id'),
           username: user.get('username')
-        }, config.jwtSecret);
+        }, process.env.JWT_SECRET);
         res.json({ token });
       } else {
         res.status(401).json({ errors: { form: 'Invalid Credentials' } });
