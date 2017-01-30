@@ -1,0 +1,7 @@
+'use strict';
+
+import dotenv from 'dotenv';
+
+dotenv.config({silent: process.env.NODE_ENV !== 'development'});
+
+//Test
