@@ -15,4 +15,3 @@ logs
 .env
 npm-debug.log
 config.js
-config
