@@ -1,8 +1,12 @@
 {
-  "name": "Kewen-lab-server",
+  "name": "kewen-lab-server",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "A server for the Kewen Lab application.",
+  "author": {
+    "name": "Tim Astier",
+    "url": "https://github.com/TimAstier"
+  },
+  "main": "src/index.js",
   "private": true,
   "scripts": {
     "start": "node build",
@@ -13,6 +17,9 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "engines": {
+    "node": "7.3.0"
+  },
   "devDependencies": {
     "babel-cli": "^6.9.0",
     "babel-core": "^6.9.0",

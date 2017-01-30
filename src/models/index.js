@@ -23,7 +23,8 @@ fs
       var model = sequelize['import'](path.join(__dirname, file));
       db[model.name] = model;
     } catch (error) {
-      console.error('Model creation error: ' + error);
+      // This produces errors in build for unknown reason:
+      //console.error('Model creation error: ' + error);
     }
   });
 Object.keys(db).forEach(function(modelName) {
