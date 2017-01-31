@@ -16,9 +16,8 @@ export default (sequelize, DataTypes) => {
       default: ''
     },
     order: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true
+      type: DataTypes.INTEGER,
+      allowNull: false
     }
   }, {
     timestamps: true,

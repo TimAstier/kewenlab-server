@@ -16,9 +16,8 @@ module.exports = {
         type: Sequelize.TEXT
       },
       order: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        unique: true
+        type: Sequelize.INTEGER,
+        allowNull: false
       },
       createdAt: {
         type: Sequelize.DATE,

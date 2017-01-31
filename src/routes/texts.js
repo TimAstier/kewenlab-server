@@ -59,6 +59,22 @@ router.put('/:id', authenticate, (req, res) => {
     });
 });
 
+// Create a new text with order = maxOrder + 1
+router.post('/', authenticate, (req, res) => {
+  Text
+    .max('order')
+    .then((maxOrder) => {
+      Text
+      .create({ order: maxOrder + 1, title: 'New Text' })
+      .then((text) => {
+        res.status(201).json({ text });
+      })
+      .catch((error) => {
+        res.status(500).json({ errors: 'Could not create text' });
+      });
+    });
+});
+
 router.put('/:id/chars', authenticate, (req, res) => {
   const { newChars, charsToDelete } = req.body;
   let charTextsToAdd = [];
