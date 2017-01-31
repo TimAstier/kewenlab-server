@@ -16,8 +16,8 @@ export default (sequelize, DataTypes) => {
     timestamps: true,
     classMethods: {
       associate: () => {
-        Word.belongsToMany(models.text, {through: 'wordText'});
-        Word.hasMany(models.wordText);
+        Word.belongsToMany(models.text, { through: 'wordText' });
+        Word.hasMany(models.wordText, { onDelete: 'cascade', hooks: true });
       }
     }
   });

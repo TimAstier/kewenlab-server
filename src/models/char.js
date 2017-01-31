@@ -20,8 +20,8 @@ export default (sequelize, DataTypes) => {
     timestamps: true,
     classMethods: {
       associate: () => {
-        Char.belongsToMany(models.text, {through: 'charText'});
-        Char.hasMany(models.charText);
+        Char.belongsToMany(models.text, { through: 'charText' });
+        Char.hasMany(models.charText, { onDelete: 'cascade', hooks: true });
       }
     }
   });

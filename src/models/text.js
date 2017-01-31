@@ -24,10 +24,10 @@ export default (sequelize, DataTypes) => {
     timestamps: true,
     classMethods: {
       associate: () => {
-        Text.belongsToMany(models.word, {through: 'wordText'});
-        Text.hasMany(models.wordText);
-        Text.belongsToMany(models.char, {through: 'charText'});
-        Text.hasMany(models.charText);
+        Text.belongsToMany(models.word, { through: 'wordText' });
+        Text.hasMany(models.wordText, { onDelete: 'cascade', hooks: true });
+        Text.belongsToMany(models.char, { through: 'charText' });
+        Text.hasMany(models.charText, { onDelete: 'cascade', hooks: true });
       }
     }
   });
