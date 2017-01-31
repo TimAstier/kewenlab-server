@@ -59,7 +59,6 @@ router.put('/:id', authenticate, (req, res) => {
     });
 });
 
-// Create a new text with order = maxOrder + 1
 router.post('/', authenticate, (req, res) => {
   Text
     .max('order')
@@ -68,7 +67,7 @@ router.post('/', authenticate, (req, res) => {
         maxOrder = 0;
       }
       Text
-      .create({ order: maxOrder + 1, title: 'New Text' })
+      .create({ order: maxOrder + 1, title: `New Text #${maxOrder + 1}` })
       .then((text) => {
         res.status(201).json({ text });
       })
