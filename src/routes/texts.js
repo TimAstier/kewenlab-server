@@ -64,6 +64,9 @@ router.post('/', authenticate, (req, res) => {
   Text
     .max('order')
     .then((maxOrder) => {
+      if (isNaN(maxOrder)) {
+        maxOrder = 0;
+      }
       Text
       .create({ order: maxOrder + 1, title: 'New Text' })
       .then((text) => {
