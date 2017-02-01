@@ -17,10 +17,6 @@ export default (sequelize, DataTypes) => {
       allowNull: false,
       unique: true
     },
-    timezone: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
     password_digest: {
       type: DataTypes.STRING,
       allowNull: false
