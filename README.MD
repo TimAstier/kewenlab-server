@@ -1,40 +1,44 @@
+# Kewen-lab-server
+The application is built with express.  
+It is based on the [Express & ES6 REST API Boilerplate](https://github.com/developit/express-es6-rest-api).
+
+## Development
+```
+$ npm install
+$ npm run dev
+```
+
+## Deployment
+The app is deployed to Heroku.
+```
+heroku create kewen-lab-server --remote production
+git push production master
+heroku addons:create heroku-postgresql:hobby-dev --remote production
+```
+
+## Database seed for chars and words
 ```
 psql -p5432 -d 'kewen-lab'
 
 // Load chars into the DB:
-// Note: IDs are ordered by chars frequency
 \copy chars(FREQUENCY, CHINESE) from 'data/chars.csv' DELIMITER ',' CSV
 
 // Load words into the DB:
 \copy words(CHINESE) FROM 'data/words.csv' DELIMITER ',' CSV
 ```
 
-Express & ES6 REST API Boilerplate
-==================================
 
-This is a straightforward boilerplate for building REST APIs with ES6 and Express.
+## Environment variables
+- DATABASE_URL=
+- FOREST_ENV_SECRET=
+- FOREST_AUTH_SECRET=
+- JWT_SECRET=
+- CLIENT_URL=
 
-- ES6 support via [babel](https://babeljs.io)
-- REST resources as middleware via [resource-router-middleware](https://github.com/developit/resource-router-middleware)
-- CORS support via [cors](https://github.com/troygoode/node-cors)
-- Body Parsing via [body-parser](https://github.com/expressjs/body-parser)
+## Environments
+- development - http://localhost:8080
+- staging - https://damp-shelf-57274.herokuapp.com
+- production - https://kewen-lab-server.herokuapp.com
 
-Getting Started
----------------
-
-```sh
-# clone it
-git clone git@github.com:developit/express-es6-rest-api.git
-cd express-es6-rest-api
-
-# Make it your own
-rm -rf .git && git init && npm init
-
-# Install dependencies
-npm install
-
-# Start development live-reload server
-PORT=8080 npm run dev
-
-# Start production server:
-PORT=8080 npm start
+## TODO
+- [ ] Try to get a save of the DB and restore it.
