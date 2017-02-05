@@ -29,7 +29,10 @@ router.get('/', authenticate, (req, res) => {
 
 router.get('/:id', authenticate, (req, res) => {
   Text
-    .findOne({ where: { id: req.params.id } })
+    .findOne({
+      where: { id: req.params.id },
+      attributes: ['id', 'title', 'content', 'order']
+    })
     .then(text => {
       res.json({ text });
     });
