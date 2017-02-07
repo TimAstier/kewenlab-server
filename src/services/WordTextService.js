@@ -5,7 +5,8 @@ export default {
     return WordText
       .destroy({
         where: {
-          id: { in: wordsToDelete.map(x => x.wordText.id) }
+          id: { in: wordsToDelete.map(x => x.wordText.id) },
+          manuallyAdded: false
         }
       });
   }

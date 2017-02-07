@@ -5,7 +5,8 @@ export default {
     return CharText
       .destroy({
         where: {
-          id: { in: charsToDelete.map(x => x.charText.id) }
+          id: { in: charsToDelete.map(x => x.charText.id) },
+          manuallyAdded: false
         }
       });
   }
