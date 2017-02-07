@@ -15,6 +15,11 @@ export default (sequelize, DataTypes) => {
     textId: {
       type: DataTypes.INTEGER
     },
+    manuallyAdded: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true
+    }
   }, {
     timestamps: true,
     classMethods: {

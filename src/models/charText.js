@@ -14,6 +14,11 @@ export default (sequelize, DataTypes) => {
     },
     order: {
       type: DataTypes.INTEGER
+    },
+    manuallyAdded: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true
     }
   }, {
     timestamps: true,
