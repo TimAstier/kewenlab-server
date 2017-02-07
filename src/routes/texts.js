@@ -92,7 +92,8 @@ router.put('/:id/chars', authenticate, (req, res) => {
       charTextsToAdd = chars.map((char) => {
         return {
           charId: char.id,
-          textId: req.params.id
+          textId: req.params.id,
+          manuallyAdded: false
         };
       });
       // Create notFoundChars in chars DB (if any):
@@ -111,7 +112,11 @@ router.put('/:id/chars', authenticate, (req, res) => {
             // Add charTexts to charTextsToAdd with IDs of newly created chars:
               return charTextsToAdd = charTextsToAdd.concat(
                 createdChars.map(x => {
-                  return { charId: x.id, textId: req.params.id };
+                  return {
+                    charId: x.id,
+                    textId: req.params.id,
+                    manuallyAdded: false
+                  };
                 })
               );
             });
@@ -149,7 +154,8 @@ router.put('/:id/words', authenticate, (req, res) => {
       wordTextsToAdd = words.map((word) => {
         return {
           wordId: word.id,
-          textId: req.params.id
+          textId: req.params.id,
+          manuallyAdded: false
         };
       });
       // Create notFoundWords in chars DB (if any):
@@ -168,7 +174,11 @@ router.put('/:id/words', authenticate, (req, res) => {
             // Add wordTexts to wordTextsToAdd with IDs of newly created words:
               return wordTextsToAdd = wordTextsToAdd.concat(
                 createdWords.map(x => {
-                  return { wordId: x.id, textId: req.params.id };
+                  return {
+                    wordId: x.id,
+                    textId: req.params.id,
+                    manuallyAdded: false
+                  };
                 })
               );
             });
