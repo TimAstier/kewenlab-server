@@ -6,7 +6,7 @@ export default {
       .destroy({
         // We do not destroy items that were manually altered
         where: {
-          id: { in: wordsToDelete.map(x => x.charTextId) },
+          id: { in: wordsToDelete.map(x => x.wordTextId) },
           manuallyAdded: false,
           manuallyDeleted: false
         }
