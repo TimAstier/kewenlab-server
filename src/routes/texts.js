@@ -93,7 +93,8 @@ router.put('/:id/chars', authenticate, (req, res) => {
         return {
           charId: char.id,
           textId: req.params.id,
-          manuallyAdded: false
+          manuallyAdded: false,
+          order: newChars.find(c => c.chinese === char.chinese).order
         };
       });
       // Create notFoundChars in chars DB (if any):
@@ -115,7 +116,8 @@ router.put('/:id/chars', authenticate, (req, res) => {
                   return {
                     charId: x.id,
                     textId: req.params.id,
-                    manuallyAdded: false
+                    manuallyAdded: false,
+                    order: newChars.find(c => c.chinese === x.chinese).order
                   };
                 })
               );
@@ -155,7 +157,8 @@ router.put('/:id/words', authenticate, (req, res) => {
         return {
           wordId: word.id,
           textId: req.params.id,
-          manuallyAdded: false
+          manuallyAdded: false,
+          order: newWords.find(w => w.chinese === word.chinese).order
         };
       });
       // Create notFoundWords in chars DB (if any):
@@ -177,7 +180,8 @@ router.put('/:id/words', authenticate, (req, res) => {
                   return {
                     wordId: x.id,
                     textId: req.params.id,
-                    manuallyAdded: false
+                    manuallyAdded: false,
+                    order: newWords.find(w => w.chinese === x.chinese).order
                   };
                 })
               );
