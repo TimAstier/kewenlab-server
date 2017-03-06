@@ -11,5 +11,14 @@ export default {
           manuallyDeleted: false
         }
       });
+  },
+  updateOrder: (charsToUpdate) => {
+    return charsToUpdate.forEach(char => {
+      CharText
+        .update(
+          { order: char.order },
+          { where: { id: char.charTextId } }
+        );
+    });
   }
 };

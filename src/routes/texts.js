@@ -81,7 +81,7 @@ router.post('/', authenticate, (req, res) => {
 });
 
 router.put('/:id/chars', authenticate, (req, res) => {
-  const { newChars, charsToDelete } = req.body;
+  const { newChars, charsToDelete, charsToUpdate } = req.body;
   let charTextsToAdd = [];
   // Find in DB all newChars for this text:
   Char
@@ -137,6 +137,14 @@ router.put('/:id/chars', authenticate, (req, res) => {
       }
     })
     .then(() => {
+      // Update charTexts in DB:
+      if (isEmpty(charsToUpdate)) {
+        return;
+      } else {
+        return CharTextService.updateOrder(charsToUpdate);
+      }
+    })
+    .then(() => {
       // Retrieve newly updated list of chars for this text:
       return TextService.getChars(req.params.id).then(chars => {
         return res.status(200).json({ chars });
@@ -145,7 +153,7 @@ router.put('/:id/chars', authenticate, (req, res) => {
 });
 
 router.put('/:id/words', authenticate, (req, res) => {
-  const { newWords, wordsToDelete } = req.body;
+  const { newWords, wordsToDelete, wordsToUpdate } = req.body;
   let wordTextsToAdd = [];
   // Find in DB all newWords for this text:
   Word
@@ -198,6 +206,14 @@ router.put('/:id/words', authenticate, (req, res) => {
         return;
       } else {
         return WordTextService.destroyWordsToDelete(wordsToDelete);
+      }
+    })
+    .then(() => {
+      // Update wordTexts in DB:
+      if (isEmpty(wordsToUpdate)) {
+        return;
+      } else {
+        return WordTextService.updateOrder(wordsToUpdate);
       }
     })
     .then(() => {

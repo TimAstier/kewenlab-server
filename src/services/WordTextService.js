@@ -11,5 +11,14 @@ export default {
           manuallyDeleted: false
         }
       });
+  },
+  updateOrder: (wordsToUpdate) => {
+    return wordsToUpdate.forEach(word => {
+      WordText
+        .update(
+          { order: word.order },
+          { where: { id: word.wordTextId } }
+        );
+    });
   }
 };
