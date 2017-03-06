@@ -13,12 +13,14 @@ export default {
       });
   },
   updateOrder: (charsToUpdate) => {
-    return charsToUpdate.forEach(char => {
-      CharText
-        .update(
-          { order: char.order },
-          { where: { id: char.charTextId } }
-        );
+    var promises = [];
+    charsToUpdate.forEach((char, i) => {
+      var newPromise = CharText.update(
+        { order: char.order },
+        { where: { id: char.charTextId } }
+      );
+      promises.push(newPromise);
     });
+    return Promise.all(promises);
   }
 };

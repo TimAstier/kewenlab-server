@@ -13,12 +13,14 @@ export default {
       });
   },
   updateOrder: (wordsToUpdate) => {
-    return wordsToUpdate.forEach(word => {
-      WordText
-        .update(
-          { order: word.order },
-          { where: { id: word.wordTextId } }
-        );
+    var promises = [];
+    wordsToUpdate.forEach((word, i) => {
+      var newPromise = WordText.update(
+        { order: word.order },
+        { where: { id: word.wordTextId } }
+      );
+      promises.push(newPromise);
     });
+    return Promise.all(promises);
   }
 };
