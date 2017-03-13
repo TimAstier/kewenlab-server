@@ -224,4 +224,64 @@ router.put('/:id/words', authenticate, (req, res) => {
     });
 });
 
+router.get('/:id/suggestions/:number'/*, authenticate */, (req, res) => {
+  const textId = req.params.id;
+  const number = req.params.number;
+  let suggestedChars = [];
+
+  // Todo: Handle the case where number !== 0, with suggestedChars
+
+  Text.findOne({
+    where: { id: textId }
+  }).then((text) => {
+    // Find all the previously used chars until this text (included)
+    Char.findAll({
+      attributes: ['id'],
+      include: [{
+        model: Text,
+        where: { order: { $lte: text.order } }
+      }]
+    }).then((chars) => {
+      // Find all the words with at least one previously used chars
+      const usedChars = chars.map(c => c.id);
+      Word.findAll({
+        include: [{
+          model: Char,
+          where: { id: { $in: usedChars } }
+        }, {
+          model: Text
+        }]
+      }).then((words) => {
+        // Keep only words built only with previously used chars
+        words = words.filter(w => {
+          let keep = true;
+          w.chars.forEach(c => {
+            if (w.chinese.indexOf(c.chinese) === -1) {
+              keep = false
+            }
+          });
+          return keep;
+        });
+        // Filter out words having a text with order $lte text.order
+        words = words.filter(w => {
+          let keep = true;
+          w.texts.forEach(t => {
+            if (t.order <= text.order) {
+              keep = false;
+            }
+          });
+          return keep;
+        });
+        // Send back only an array of Chinese words
+        const suggestedWords = words.map(w => w.chinese);
+        return res.status(200).json({
+          chars: suggestedChars,
+          words: suggestedWords
+        });
+      });
+    });
+  });
+
+});
+
 export default router;

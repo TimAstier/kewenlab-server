@@ -22,6 +22,8 @@ export default (sequelize, DataTypes) => {
       associate: () => {
         Char.belongsToMany(models.text, { through: 'charText' });
         Char.hasMany(models.charText, { onDelete: 'cascade', hooks: true });
+        Char.belongsToMany(models.word, { through: 'charWord' });
+        Char.hasMany(models.charWord, { onDelete: 'cascade', hooks: true });
       }
     }
   });
