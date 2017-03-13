@@ -9,6 +9,7 @@ import users from './routes/users';
 import auth from './routes/auth';
 import texts from './routes/texts';
 import tokenizer from './routes/tokenizer';
+import scripts from './routes/scripts';
 
 let app = express();
 
@@ -34,6 +35,7 @@ app.use('/api/users', users);
 app.use('/api/auth', auth);
 app.use('/api/texts', texts);
 app.use('/api/tokenizer', tokenizer);
+app.use('/api/scripts', scripts);
 
 const port = process.env.PORT || 8080;
 
