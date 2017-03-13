@@ -255,10 +255,13 @@ router.get('/:id/suggestions/:number'/*, authenticate */, (req, res) => {
         // Keep only words built only with previously used chars
         words = words.filter(w => {
           let keep = true;
-          w.chars.forEach(c => {
-            if (w.chinese.indexOf(c.chinese) === -1) {
-              keep = false
+          let wordChars = w.chinese.split('');
+          let usedCharsInWord = w.chars.map(c => c.chinese);
+          wordChars.forEach(c => {
+            if (usedCharsInWord.indexOf(c) === -1) {
+              return keep = false;
             }
+            return;
           });
           return keep;
         });
