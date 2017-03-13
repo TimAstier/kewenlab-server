@@ -224,12 +224,14 @@ router.put('/:id/words', authenticate, (req, res) => {
     });
 });
 
+// TODO: Link words to chars when adding new words
+
 router.get('/:id/suggestions/:number'/*, authenticate */, (req, res) => {
   const textId = req.params.id;
   const number = req.params.number;
   let suggestedChars = [];
 
-  // Todo: Handle the case where number !== 0, with suggestedChars
+  // TODO: Handle the case where number !== 0, with suggestedChars
 
   Text.findOne({
     where: { id: textId }
@@ -245,6 +247,9 @@ router.get('/:id/suggestions/:number'/*, authenticate */, (req, res) => {
       // Find all the words with at least one previously used chars
       const usedChars = chars.map(c => c.id);
       Word.findAll({
+        where: {
+          frequency: { $ne: 999999 }
+        },
         include: [{
           model: Char,
           where: { id: { $in: usedChars } }
@@ -276,6 +281,9 @@ router.get('/:id/suggestions/:number'/*, authenticate */, (req, res) => {
           return keep;
         });
         // Send back only an array of Chinese words
+        words = words.sort((a, b) => {
+          return a.frequency - b.frequency;
+        });
         const suggestedWords = words.map(w => w.chinese);
         return res.status(200).json({
           chars: suggestedChars,

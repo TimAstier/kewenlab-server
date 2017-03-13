@@ -25,6 +25,9 @@ psql -p5432 -d 'kewen-lab'
 
 // Load words into the DB:
 \copy words(CHINESE) FROM 'data/words.csv' DELIMITER ',' CSV
+
+//Load words with FQ into the DB:
+\copy words(FREQUENCY, CHINESE) from 'src/data/words_with_fq.csv' DELIMITER ',' CSV
 ```
 
 
