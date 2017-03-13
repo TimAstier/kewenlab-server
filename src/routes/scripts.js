@@ -19,17 +19,16 @@ function linkWord(word) {
         wordId: word.id
       });
     });
+    console.log(word.id);
     return CharWord.bulkCreate(newCharWords);
   });
 }
 
 router.get('/', (req, res) => {
-  Word.findOne({
-    where: { id: 140279 }
-  }).then(word => {
-    linkWord(word);
-  }).then(() => {
-    res.json('Done');
+  Word.findAll().then(words => {
+    words.forEach(w => {
+      linkWord(w);
+    });
   });
 });
 
