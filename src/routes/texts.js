@@ -226,12 +226,14 @@ router.put('/:id/words', authenticate, (req, res) => {
 
 // TODO: Link words to chars when adding new words
 
-router.get('/:id/suggestions/:number'/*, authenticate */, (req, res) => {
+router.get('/:id/suggestions/:number', authenticate, (req, res) => {
   const textId = req.params.id;
   const number = req.params.number;
   let suggestedChars = [];
+  let suggestedWords = [];
 
   // TODO: Handle the case where number !== 0, with suggestedChars
+  // TODO: Return elements with status ("Suggestion" or "From {origin}")
 
   Text.findOne({
     where: { id: textId }
@@ -284,7 +286,7 @@ router.get('/:id/suggestions/:number'/*, authenticate */, (req, res) => {
         words = words.sort((a, b) => {
           return a.frequency - b.frequency;
         });
-        const suggestedWords = words.map(w => w.chinese);
+        suggestedWords = words.map(w => w.chinese);
         return res.status(200).json({
           chars: suggestedChars,
           words: suggestedWords

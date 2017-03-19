@@ -45,4 +45,5 @@ psql -p5432 -d 'kewen-lab'
 
 ## TODO
 - [ ] Try to get a save of the DB and restore it.
-- [ ] Linkwords to chars when creating a new word in the DB.
+- [ ] Link words to chars when creating a new word in the DB.
+- [ ] Possibility to customize nodejieba with our own dictionary.
