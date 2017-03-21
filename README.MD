@@ -25,9 +25,9 @@ heroku pg:psql --remote production // production
 
 /** Load chars into the DB **/
 // dev and prod
-\copy chars(FREQUENCY, CHINESE) from 'data/chars.csv' DELIMITER ',' CSV
+\copy chars(FREQUENCY, CHINESE) from 'src/data/chars.csv' DELIMITER ',' CSV
 // staging
-\copy chars(FREQUENCY, CHINESE) from 'data/chars_test.csv' DELIMITER ',' CSV
+\copy chars(FREQUENCY, CHINESE) from 'src/data/chars_test.csv' DELIMITER ',' CSV
 
 /** Load words with FQ into the DB **/
 // dev and prod
@@ -36,10 +36,14 @@ heroku pg:psql --remote production // production
 \copy words(FREQUENCY, CHINESE) from 'src/data/words_test.csv' DELIMITER ',' CSV
 
 /** Link words to chars **/
-// This can take a few minutes
-'ROOT_URL/api/scripts' // Visit this URL one time
-```
 
+// Option 1: Visit this URL one time (can take a few minutes)
+'http://localhost:8080/api/scripts' // dev
+'https://damp-shelf-57274.herokuapp.com/api/scripts' // staging
+
+// Option 2: Upload from data csv file
+\copy "charWords" from 'src/data/charWords.csv' DELIMITER ',' CSV HEADER
+```
 
 ## Environment variables
 - DATABASE_URL=
@@ -53,7 +57,12 @@ heroku pg:psql --remote production // production
 - staging - https://damp-shelf-57274.herokuapp.com
 - production - https://kewen-lab-server.herokuapp.com
 
+## Misc
+- Upgrading Heroku Postgres DB: https://devcenter.heroku.com/articles/upgrading-heroku-postgres-databases
+
 ## TODO
-- [ ] Try to get a save of the DB and restore it.
+- [x] Link words to chars offline and get the result in a data file.
 - [ ] Link words to chars when creating a new word in the DB.
+- [ ] Add new chars if not exist when linking words to chars
+- [ ] Try to get a save of the DB and restore it.
 - [ ] Possibility to customize nodejieba with our own dictionary.
