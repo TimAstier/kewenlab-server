@@ -17,17 +17,27 @@ heroku addons:create heroku-postgresql:hobby-dev --remote production
 ```
 
 ## Database seed for chars and words
-```
-psql -p5432 -d 'kewen-lab'
+```js
+/** connect to DB **/
+psql -p5432 -d 'kewen-lab' // development
+heroku pg:psql --remote staging // staging
+heroku pg:psql --remote production // production
 
-// Load chars into the DB:
+/** Load chars into the DB **/
+// dev and prod
 \copy chars(FREQUENCY, CHINESE) from 'data/chars.csv' DELIMITER ',' CSV
+// staging
+\copy chars(FREQUENCY, CHINESE) from 'data/chars_test.csv' DELIMITER ',' CSV
 
-// Load words into the DB:
-\copy words(CHINESE) FROM 'data/words.csv' DELIMITER ',' CSV
+/** Load words with FQ into the DB **/
+// dev and prod
+\copy words(FREQUENCY, CHINESE) from 'src/data/words.csv' DELIMITER ',' CSV
+// staging
+\copy words(FREQUENCY, CHINESE) from 'src/data/words_test.csv' DELIMITER ',' CSV
 
-//Load words with FQ into the DB:
-\copy words(FREQUENCY, CHINESE) from 'src/data/words_with_fq.csv' DELIMITER ',' CSV
+/** Link words to chars **/
+// This can take a few minutes
+'ROOT_URL/api/scripts' // Visit this URL one time
 ```
 
 
