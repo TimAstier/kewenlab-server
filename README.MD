@@ -59,10 +59,11 @@ heroku pg:psql --remote production // production
 
 ## Misc
 - Upgrading Heroku Postgres DB: https://devcenter.heroku.com/articles/upgrading-heroku-postgres-databases
+- Daily backups are scheduled in staging and prod at 02:00 America/Los_Angeles
 
 ## TODO
 - [x] Link words to chars offline and get the result in a data file.
+- [x] Schedule DB backups
 - [ ] Link words to chars when creating a new word in the DB.
 - [ ] Add new chars if not exist when linking words to chars
-- [ ] Try to get a save of the DB and restore it.
 - [ ] Possibility to customize nodejieba with our own dictionary.
