@@ -1,7 +1,5 @@
 export default (sequelize, DataTypes) => {
-  let models = sequelize.models;
-
-  let User = sequelize.define('user', {
+  const User = sequelize.define('user', {
     id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
@@ -25,6 +23,10 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.BOOLEAN,
       allowNull: false,
       default: false
+    },
+    hidden_words: {
+      type: DataTypes.ARRAY(DataTypes.INTEGER),
+      default: []
     }
   }, {
     timestamps: true,
@@ -34,4 +36,4 @@ export default (sequelize, DataTypes) => {
     }
   });
   return User;
-}
+};
