@@ -290,11 +290,11 @@ router.get('/:id/suggestions/:number', authenticate, (req, res) => {
           });
           return keep;
         });
-        // Send back only an array of Chinese words
+        // Send back an array of Chinese words and Ids
         words = words.sort((a, b) => {
           return a.frequency - b.frequency;
         });
-        suggestedWords = words.map(w => w.chinese);
+        suggestedWords = words.map(w => { return { id: w.id, chinese: w.chinese }; });
         return res.status(200).json({
           chars: suggestedChars,
           words: suggestedWords
