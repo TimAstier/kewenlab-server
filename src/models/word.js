@@ -1,7 +1,7 @@
 export default (sequelize, DataTypes) => {
-  let models = sequelize.models;
+  const models = sequelize.models;
 
-  let Word = sequelize.define('word', {
+  const Word = sequelize.define('word', {
     id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
@@ -15,6 +15,11 @@ export default (sequelize, DataTypes) => {
     frequency: {
       type: DataTypes.INTEGER,
       unique: true
+    },
+    banned: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      default: false
     }
   }, {
     timestamps: true,

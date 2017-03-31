@@ -250,15 +250,6 @@ router.get('/:id/suggestions/:number', authenticate, (req, res) => {
       // Find all the words with at least one previously used chars
       const usedChars = chars.map(c => c.id);
       Word.findAll({
-        // where: {
-        //   frequency: { $ne: 999999 },
-        //   chineseLength: models.sequelize.where(
-        //     models.sequelize.fn(
-        //       'CHAR_LENGTH', models.sequelize.col('words.chinese')
-        //     ),
-        //     { $gt: 1 }
-        //   )
-        // },
         where: models.sequelize.and(
           models.sequelize.where(
             models.sequelize.fn(
@@ -266,7 +257,8 @@ router.get('/:id/suggestions/:number', authenticate, (req, res) => {
             ),
             { $gt: 1 }
           ),
-          { frequency: { $ne: 999999 } }
+          { frequency: { $ne: 999999 } },
+          { banned: { $not: true } }
         ),
         include: [{
           model: Char,
