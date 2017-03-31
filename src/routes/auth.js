@@ -29,8 +29,7 @@ router.post('/', (req, res) => {
         }
         const token = jwt.sign({
           id: user.get('id'),
-          username: user.get('username'),
-          hidden_words: user.get('hidden_words'),
+          username: user.get('username')
         }, process.env.JWT_SECRET);
         res.json({ token });
       } else {

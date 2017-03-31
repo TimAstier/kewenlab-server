@@ -68,7 +68,23 @@ router.post('/', (req, res) => {
       res.status(400).json(errors);
     }
   });
+});
 
+router.put('/:id/hideword/:wordId', (req, res) => {
+  const { id, wordId } = req.params;
+  User
+    .findOne({ where: { id: id } })
+    .then((user) => {
+      if (user.hidden_words.indexOf(wordId) === -1) {
+        user.hidden_words.push(parseInt(wordId, 10));
+        return user.update({
+          hidden_words: user.hidden_words
+        }).then((user) => {
+          return res.status(204).send(user);
+        });
+      }
+      return res.status(200).send(user);
+    });
 });
 
 export default router;

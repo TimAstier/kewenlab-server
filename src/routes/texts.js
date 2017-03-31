@@ -8,6 +8,7 @@ import { char as Char } from '../models';
 import { charText as CharText } from '../models';
 import { word as Word } from '../models';
 import { wordText as WordText } from '../models';
+import { user as User } from '../models';
 
 import TextService from '../services/TextService';
 import CharTextService from '../services/CharTextService';
@@ -227,77 +228,82 @@ router.put('/:id/words', authenticate, (req, res) => {
 
 // TODO: Link words to chars when adding new words
 
-router.get('/:id/suggestions/:number', authenticate, (req, res) => {
+router.get('/:id/suggestions/:number/:currentUserId', authenticate, (req, res) => {
   const textId = req.params.id;
   const number = req.params.number;
+  const currentUserId = req.params.currentUserId;
   let suggestedChars = [];
   let suggestedWords = [];
 
   // TODO: Handle the case where number !== 0, with suggestedChars
   // TODO: Return elements with status ("Suggestion" or "From {origin}")
-
-  Text.findOne({
-    where: { id: textId }
-  }).then((text) => {
-    // Find all the previously used chars until this text (included)
-    Char.findAll({
-      attributes: ['id'],
-      include: [{
-        model: Text,
-        where: { order: { $lte: text.order } }
-      }]
-    }).then((chars) => {
-      // Find all the words with at least one previously used chars
-      const usedChars = chars.map(c => c.id);
-      Word.findAll({
-        where: models.sequelize.and(
-          models.sequelize.where(
-            models.sequelize.fn(
-              'CHAR_LENGTH', models.sequelize.col('word.chinese')
-            ),
-            { $gt: 1 }
-          ),
-          { frequency: { $ne: 999999 } },
-          { banned: { $not: true } }
-        ),
+  User.findOne({
+    where: { id: currentUserId }
+  }).then((user) => {
+    Text.findOne({
+      where: { id: textId }
+    }).then((text) => {
+      // Find all the previously used chars until this text (included)
+      Char.findAll({
+        attributes: ['id'],
         include: [{
-          model: Char,
-          where: { id: { $in: usedChars } }
-        }, {
-          model: Text
+          model: Text,
+          where: { order: { $lte: text.order } }
         }]
-      }).then((words) => {
-        // Keep only words built only with previously used chars
-        words = words.filter(w => {
-          let keep = true;
-          let wordChars = w.chinese.split('');
-          let usedCharsInWord = w.chars.map(c => c.chinese);
-          wordChars.forEach(c => {
-            if (usedCharsInWord.indexOf(c) === -1) {
-              return keep = false;
-            }
-            return;
+      }).then((chars) => {
+        // Find all the words with at least one previously used chars
+        const usedChars = chars.map(c => c.id);
+        Word.findAll({
+          where: models.sequelize.and(
+            models.sequelize.where(
+              models.sequelize.fn(
+                'CHAR_LENGTH', models.sequelize.col('word.chinese')
+              ),
+              { $gt: 1 }
+            ),
+            { frequency: { $ne: 999999 } },
+            { banned: { $not: true } }
+          ),
+          include: [{
+            model: Char,
+            where: { id: { $in: usedChars } }
+          }, {
+            model: Text
+          }]
+        }).then((words) => {
+          // Keep only words built only with previously used chars
+          words = words.filter(w => {
+            let keep = true;
+            let wordChars = w.chinese.split('');
+            let usedCharsInWord = w.chars.map(c => c.chinese);
+            wordChars.forEach(c => {
+              if (usedCharsInWord.indexOf(c) === -1) {
+                return keep = false;
+              }
+              return;
+            });
+            return keep;
           });
-          return keep;
-        });
-        // Filter out words having a text with order $lte text.order
-        words = words.filter(w => {
-          let keep = true;
-          w.texts.forEach(t => {
-            if (t.order <= text.order) {
-              keep = false;
-            }
+          // Filter out words having a text with order $lte text.order
+          words = words.filter(w => {
+            let keep = true;
+            w.texts.forEach(t => {
+              if (t.order <= text.order) {
+                keep = false;
+              }
+            });
+            return keep;
           });
-          return keep;
-        });
-        // Send back an array of Chinese words and Ids
-        words = words.sort((a, b) => {
-          return a.frequency - b.frequency;
-        });
-        suggestedWords = words.map(w => { return { id: w.id, chinese: w.chinese }; });
-        return res.status(200).json({
-          chars: suggestedChars,
-          words: suggestedWords
+          // Send back an array of Chinese words and Ids
+          words = words.sort((a, b) => {
+            return a.frequency - b.frequency;
+          });
+          suggestedWords = words.map(w => { return { id: w.id, chinese: w.chinese }; });
+          return res.status(200).json({
+            chars: suggestedChars,
+            words: suggestedWords,
+            hiddenWords: user.get('hidden_words')
+          });
         });
       });
     });
