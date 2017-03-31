@@ -2,6 +2,7 @@ import express from 'express';
 import authenticate from '../middlewares/authenticate.js';
 import isEmpty from 'lodash/isEmpty';
 
+import models from '../models';
 import { text as Text } from '../models';
 import { char as Char } from '../models';
 import { charText as CharText } from '../models';
@@ -249,9 +250,24 @@ router.get('/:id/suggestions/:number', authenticate, (req, res) => {
       // Find all the words with at least one previously used chars
       const usedChars = chars.map(c => c.id);
       Word.findAll({
-        where: {
-          frequency: { $ne: 999999 }
-        },
+        // where: {
+        //   frequency: { $ne: 999999 },
+        //   chineseLength: models.sequelize.where(
+        //     models.sequelize.fn(
+        //       'CHAR_LENGTH', models.sequelize.col('words.chinese')
+        //     ),
+        //     { $gt: 1 }
+        //   )
+        // },
+        where: models.sequelize.and(
+          models.sequelize.where(
+            models.sequelize.fn(
+              'CHAR_LENGTH', models.sequelize.col('word.chinese')
+            ),
+            { $gt: 1 }
+          ),
+          { frequency: { $ne: 999999 } }
+        ),
         include: [{
           model: Char,
           where: { id: { $in: usedChars } }
