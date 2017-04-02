@@ -1,26 +1,11 @@
 export default (sequelize, DataTypes) => {
-  let models = sequelize.models;
+  const models = sequelize.models;
 
-  let Text = sequelize.define('text', {
-    id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true
-    },
-    title: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    content: {
-      type: DataTypes.TEXT,
-      default: ''
-    },
-    order: {
-      type: DataTypes.INTEGER,
-      allowNull: false
-    }
+  const Text = sequelize.define('text', {
+    title: { type: DataTypes.STRING },
+    content: { type: DataTypes.TEXT, defaultValue: '' },
+    order: { type: DataTypes.INTEGER }
   }, {
-    timestamps: true,
     classMethods: {
       associate: () => {
         Text.belongsToMany(models.word, { through: 'wordText' });

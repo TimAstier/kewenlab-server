@@ -3,14 +3,14 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import isEmpty from 'lodash/isEmpty';
 
-import { user as User } from '../models';
+import models from '../models';
 
 let router = express.Router();
 
 router.post('/', (req, res) => {
   const { identifier, password } = req.body;
 
-  User
+  models.user
     .findAll({
       where: {
         $or: [

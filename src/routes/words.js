@@ -1,11 +1,11 @@
 import express from 'express';
 
-import { word as Word } from '../models';
+import models from '../models';
 
 const router = express.Router();
 
 router.put('/:id/ban', (req, res) => {
-  Word
+  models.word
     .findOne({ where: { id: req.params.id } })
     .then((word) => {
       word.banned = true;

@@ -4,14 +4,14 @@ import bcrypt from 'bcrypt';
 import Promise from 'bluebird';
 import isEmpty from 'lodash/isEmpty';
 
-import { user as User } from '../models';
+import models from '../models';
 
-let router = express.Router();
+const router = express.Router();
 
 function validateInput(data, otherValidations) {
   let { errors } = otherValidations(data);
   return Promise.all([
-    User
+    models.user
       .findAll({ where: { email: data.email } })
       .then(user => {
       if (!isEmpty(user)) {
@@ -19,7 +19,7 @@ function validateInput(data, otherValidations) {
       }
     }),
 
-    User
+    models.user
       .findAll({ where: { username: data.username } })
       .then(user => {
       if (!isEmpty(user)) {
@@ -36,7 +36,7 @@ function validateInput(data, otherValidations) {
 }
 
 router.get('/:identifier', (req, res) => {
-  User
+  models.user
     .findAll({
       attributes: ['username', 'email'],
       where: {
@@ -58,7 +58,7 @@ router.post('/', (req, res) => {
       const active = false;
       const password_digest = bcrypt.hashSync(password, 10);
 
-      User.create({
+      model.user.create({
         username, email, password_digest, active
       })
       .then(user => res.json({ success: true }))

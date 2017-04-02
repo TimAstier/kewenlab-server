@@ -4,34 +4,36 @@ import Sequelize from 'sequelize';
 
 const databaseOptions = {
   logging: false,
-  //logging: console.log,
+  // logging: console.log,
   pool: { maxConnections: 10, minConnections: 1 }
 };
 if (process.env.SSL_DATABASE) {
   databaseOptions.dialectOptions = { ssl: true };
 }
 
-let sequelize = new Sequelize(process.env.DATABASE_URL, databaseOptions);
-let db = {};
+const sequelize = new Sequelize(process.env.DATABASE_URL, databaseOptions);
+const db = {};
 fs
   .readdirSync(__dirname)
-  .filter(function (file) {
+  .filter(file => {
     return (file.indexOf('.') !== 0) && (file !== 'index.js');
   })
-  .forEach(function (file) {
+  .forEach(file => {
+    let model = null;
     try {
-      var model = sequelize['import'](path.join(__dirname, file));
+      model = sequelize.import(path.join(__dirname, file));
       db[model.name] = model;
     } catch (error) {
       // This produces errors in build for unknown reason:
-      //console.error('Model creation error: ' + error);
+      // console.error('Model creation error: ' + error);
     }
   });
-Object.keys(db).forEach(function(modelName) {
+Object.keys(db).forEach(modelName => {
   if ('associate' in db[modelName]) {
     db[modelName].associate(db);
   }
 });
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
+
 module.exports = db;

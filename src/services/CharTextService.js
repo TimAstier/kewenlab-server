@@ -2,6 +2,8 @@ import { charText as CharText } from '../models';
 
 export default {
   destroyCharsToDelete: (charsToDelete) => {
+    console.log('test');
+    console.log(charsToDelete);
     return CharText
       .destroy({
         // We do not destroy items that were manually altered

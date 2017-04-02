@@ -1,23 +1,10 @@
 export default (sequelize, DataTypes) => {
-  let models = sequelize.models;
+  const models = sequelize.models;
 
-  let Char = sequelize.define('char', {
-    id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true
-    },
-    chinese: {
-      type: DataTypes.STRING(1),
-      allowNull: false,
-      unique: true
-    },
-    frequency: {
-      type: DataTypes.INTEGER,
-      unique: true
-    }
+  const Char = sequelize.define('char', {
+    chinese: { type: DataTypes.STRING(1) },
+    frequency: { type: DataTypes.INTEGER }
   }, {
-    timestamps: true,
     classMethods: {
       associate: () => {
         Char.belongsToMany(models.text, { through: 'charText' });

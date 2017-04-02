@@ -1,8 +1,8 @@
-import { wordText as WordText } from '../models';
+import models from '../models';
 
 export default {
   destroyWordsToDelete: (wordsToDelete) => {
-    return WordText
+    return models.wordText
       .destroy({
         // We do not destroy items that were manually altered
         where: {
@@ -13,9 +13,9 @@ export default {
       });
   },
   updateOrder: (wordsToUpdate) => {
-    var promises = [];
-    wordsToUpdate.forEach((word, i) => {
-      var newPromise = WordText.update(
+    const promises = [];
+    wordsToUpdate.forEach((word) => {
+      const newPromise = models.wordText.update(
         { order: word.order },
         { where: { id: word.wordTextId } }
       );

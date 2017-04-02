@@ -1,15 +1,13 @@
 import express from 'express';
 
-import { char as Char } from '../models';
-import { word as Word } from '../models';
-import { charWord as CharWord } from '../models';
+import models from '../models';
 
 let router = express.Router();
 
 function linkWord(word) {
   const chars = word.chinese.split('');
   // TODO: create chars if they do not exist
-  Char.findAll({
+  models.char.findAll({
     where: { chinese: { $in: chars } }
   }).then(chars => {
     let newCharWords = [];
@@ -25,7 +23,7 @@ function linkWord(word) {
 }
 
 router.get('/', (req, res) => {
-  Word.findAll().then(words => {
+  model.word.findAll().then(words => {
     words.forEach(w => {
       linkWord(w);
     });
@@ -34,7 +32,7 @@ router.get('/', (req, res) => {
 
 router.get('/:id', (req, res) => {
   const id = req.params.id;
-  Word.findOne({
+  model.word.findOne({
     where: { id: id }
   }).then(w => {
     linkWord(w);
