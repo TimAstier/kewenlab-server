@@ -9,30 +9,28 @@ import models from '../models';
 const router = express.Router();
 
 function validateInput(data, otherValidations) {
-  let { errors } = otherValidations(data);
+  const { errors } = otherValidations(data);
   return Promise.all([
     models.user
       .findAll({ where: { email: data.email } })
       .then(user => {
-      if (!isEmpty(user)) {
-        errors.email = 'There is user with such email';
-      }
-    }),
-
+        if (!isEmpty(user)) {
+          errors.email = 'There is user with such email';
+        }
+      }),
     models.user
       .findAll({ where: { username: data.username } })
       .then(user => {
-      if (!isEmpty(user)) {
-        errors.username = 'There is user with such username';
-      }
-    })
+        if (!isEmpty(user)) {
+          errors.username = 'There is user with such username';
+        }
+      })
   ]).then(() => {
     return {
       errors,
       isValid: isEmpty(errors)
     };
   });
-
 }
 
 router.get('/:identifier', (req, res) => {
@@ -48,7 +46,7 @@ router.get('/:identifier', (req, res) => {
     })
     .then(user => {
       res.json({ user });
-  });
+    });
 });
 
 router.post('/', (req, res) => {
@@ -56,14 +54,13 @@ router.post('/', (req, res) => {
     if (isValid) {
       const { username, email, password } = req.body;
       const active = false;
-      const password_digest = bcrypt.hashSync(password, 10);
+      const password_digest = bcrypt.hashSync(password, 10); // eslint-disable-line camelcase
 
       model.user.create({
         username, email, password_digest, active
       })
-      .then(user => res.json({ success: true }))
+      .then(user => res.json({ user }))
       .catch(err => res.status(500).json({ error: err }));
-
     } else {
       res.status(400).json(errors);
     }
@@ -72,7 +69,7 @@ router.post('/', (req, res) => {
 
 router.put('/:id/hideword/:wordId', (req, res) => {
   const { id, wordId } = req.params;
-  User
+  models.usern
     .findOne({ where: { id: id } })
     .then((user) => {
       if (user.hidden_words.indexOf(wordId) === -1) {

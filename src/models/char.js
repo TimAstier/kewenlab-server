@@ -2,6 +2,7 @@ export default (sequelize, DataTypes) => {
   const models = sequelize.models;
 
   const Char = sequelize.define('char', {
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     chinese: { type: DataTypes.STRING(1) },
     frequency: { type: DataTypes.INTEGER }
   }, {

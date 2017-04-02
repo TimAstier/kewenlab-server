@@ -2,6 +2,7 @@ export default (sequelize, DataTypes) => {
   const models = sequelize.models;
 
   const Word = sequelize.define('word', {
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     chinese: { type: DataTypes.STRING },
     frequency: { type: DataTypes.INTEGER },
     banned: { type: DataTypes.BOOLEAN, defaultValue: false }

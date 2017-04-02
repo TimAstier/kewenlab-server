@@ -2,6 +2,7 @@ export default (sequelize, DataTypes) => {
   const models = sequelize.models;
 
   const Text = sequelize.define('text', {
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     title: { type: DataTypes.STRING },
     content: { type: DataTypes.TEXT, defaultValue: '' },
     order: { type: DataTypes.INTEGER }

@@ -1,10 +1,8 @@
-import { charText as CharText } from '../models';
+import models from '../models';
 
 export default {
   destroyCharsToDelete: (charsToDelete) => {
-    console.log('test');
-    console.log(charsToDelete);
-    return CharText
+    return models.charText
       .destroy({
         // We do not destroy items that were manually altered
         where: {
@@ -15,9 +13,9 @@ export default {
       });
   },
   updateOrder: (charsToUpdate) => {
-    var promises = [];
-    charsToUpdate.forEach((char, i) => {
-      var newPromise = CharText.update(
+    const promises = [];
+    charsToUpdate.forEach((char) => {
+      const newPromise = models.charText.update(
         { order: char.order },
         { where: { id: char.charTextId } }
       );

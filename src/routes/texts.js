@@ -3,21 +3,16 @@ import authenticate from '../middlewares/authenticate.js';
 import isEmpty from 'lodash/isEmpty';
 
 import models from '../models';
-import { text as Text } from '../models';
-import { char as Char } from '../models';
-import { charText as CharText } from '../models';
-import { word as Word } from '../models';
-import { wordText as WordText } from '../models';
-import { user as User } from '../models';
 
 import TextService from '../services/TextService';
 import CharTextService from '../services/CharTextService';
 import WordTextService from '../services/WordTextService';
+import CharsGetter from '../services/chars-getter';
 
-let router = express.Router();
+const router = express.Router();
 
 router.get('/', authenticate, (req, res) => {
-  Text
+  models.text
     .findAll({
       attributes: ['id', 'order', 'title'],
       order: [
@@ -30,7 +25,7 @@ router.get('/', authenticate, (req, res) => {
 });
 
 router.get('/:id', authenticate, (req, res) => {
-  Text
+  models.text
     .findOne({
       where: { id: req.params.id },
       attributes: ['id', 'title', 'content', 'order']
@@ -54,7 +49,7 @@ router.get('/:id/words', authenticate, (req, res) => {
 
 router.put('/:id', authenticate, (req, res) => {
   const { content } = req.body;
-  Text
+  models.text
     .update(
       { content },
       { where: { id: req.params.id } }
@@ -65,18 +60,19 @@ router.put('/:id', authenticate, (req, res) => {
 });
 
 router.post('/', authenticate, (req, res) => {
-  Text
+  models.text
     .max('order')
     .then((maxOrder) => {
-      if (isNaN(maxOrder)) {
-        maxOrder = 0;
+      let order = maxOrder;
+      if (isNaN(order)) {
+        order = 0;
       }
-      Text
-      .create({ order: maxOrder + 1, title: `New Text #${maxOrder + 1}` })
+      models.text
+      .create({ order: order + 1, title: `New Text #${order + 1}` })
       .then((text) => {
         res.status(201).json({ text });
       })
-      .catch((error) => {
+      .catch(() => {
         res.status(500).json({ errors: 'Could not create text' });
       });
     });
@@ -86,7 +82,7 @@ router.put('/:id/chars', authenticate, (req, res) => {
   const { newChars, charsToDelete, charsToUpdate } = req.body;
   let charTextsToAdd = [];
   // Find in DB all newChars for this text:
-  Char
+  models.char
     .findAll({
       where: { chinese: { in: newChars.map(x => x.chinese) } }
     })
@@ -105,52 +101,51 @@ router.put('/:id/chars', authenticate, (req, res) => {
       });
       if (isEmpty(notFoundChars)) {
         return;
-      } else {
-        notFoundChars = notFoundChars.map(x => {
-          return { chinese: x.chinese };
-        });
-        return Char
-            .bulkCreate(notFoundChars, {returning: true})
-            .then((createdChars) => {
-            // Add charTexts to charTextsToAdd with IDs of newly created chars:
-              return charTextsToAdd = charTextsToAdd.concat(
-                createdChars.map(x => {
-                  return {
-                    charId: x.id,
-                    textId: req.params.id,
-                    manuallyAdded: false,
-                    order: newChars.find(c => c.chinese === x.chinese).order
-                  };
-                })
-              );
-            });
       }
+      notFoundChars = notFoundChars.map(x => {
+        return { chinese: x.chinese };
+      });
+      models.char
+          .bulkCreate(notFoundChars, {returning: true})
+          .then((createdChars) => {
+          // Add charTexts to charTextsToAdd with IDs of newly created chars:
+            return charTextsToAdd.concat(
+              createdChars.map(x => {
+                return {
+                  charId: x.id,
+                  textId: req.params.id,
+                  manuallyAdded: false,
+                  order: newChars.find(c => c.chinese === x.chinese).order
+                };
+              })
+            );
+          });
     })
     .then(() => {
       // Create charTexts in DB:
-      return CharText.bulkCreate(charTextsToAdd);
+      return models.charText.bulkCreate(charTextsToAdd);
     })
     .then(() => {
       // Destroy charTexts in DB:
       if (isEmpty(charsToDelete)) {
         return;
-      } else {
-        return CharTextService.destroyCharsToDelete(charsToDelete);
       }
+      CharTextService.destroyCharsToDelete(charsToDelete);
     })
     .then(() => {
       // Update charTexts in DB:
       if (isEmpty(charsToUpdate)) {
         return;
-      } else {
-        return CharTextService.updateOrder(charsToUpdate);
       }
+      CharTextService.updateOrder(charsToUpdate);
     })
     .then(() => {
       // Retrieve newly updated list of chars for this text:
-      return TextService.getChars(req.params.id).then(chars => {
-        return res.status(200).json({ chars });
-      });
+      return new CharsGetter(req.params.id)
+        .perform()
+        .then(chars => {
+          return res.status(200).json({ chars });
+        });
     });
 });
 
@@ -158,7 +153,7 @@ router.put('/:id/words', authenticate, (req, res) => {
   const { newWords, wordsToDelete, wordsToUpdate } = req.body;
   let wordTextsToAdd = [];
   // Find in DB all newWords for this text:
-  Word
+  models.word
     .findAll({
       where: { chinese: { in: newWords.map(x => x.chinese) } }
     })
@@ -177,50 +172,48 @@ router.put('/:id/words', authenticate, (req, res) => {
       });
       if (isEmpty(notFoundWords)) {
         return;
-      } else {
-        notFoundWords = notFoundWords.map(x => {
-          return { chinese: x.chinese };
-        });
-        return Word
-            .bulkCreate(notFoundWords, {returning: true})
-            .then((createdWords) => {
-            // Add wordTexts to wordTextsToAdd with IDs of newly created words:
-              return wordTextsToAdd = wordTextsToAdd.concat(
-                createdWords.map(x => {
-                  return {
-                    wordId: x.id,
-                    textId: req.params.id,
-                    manuallyAdded: false,
-                    order: newWords.find(w => w.chinese === x.chinese).order
-                  };
-                })
-              );
-            });
       }
+      notFoundWords = notFoundWords.map(x => {
+        return { chinese: x.chinese };
+      });
+      models.word
+          .bulkCreate(notFoundWords, {returning: true})
+          .then((createdWords) => {
+          // Add wordTexts to wordTextsToAdd with IDs of newly created words:
+            return wordTextsToAdd.concat(
+              createdWords.map(x => {
+                return {
+                  wordId: x.id,
+                  textId: req.params.id,
+                  manuallyAdded: false,
+                  order: newWords.find(w => w.chinese === x.chinese).order
+                };
+              })
+            );
+          });
     })
     .then(() => {
       // Create wordTexts in DB:
-      return WordText.bulkCreate(wordTextsToAdd);
+      return models.wordText.bulkCreate(wordTextsToAdd);
     })
     .then(() => {
       // Destroy wordTexts in DB:
       if (isEmpty(wordsToDelete)) {
         return;
-      } else {
-        return WordTextService.destroyWordsToDelete(wordsToDelete);
       }
+      WordTextService.destroyWordsToDelete(wordsToDelete);
     })
     .then(() => {
       // Update wordTexts in DB:
       if (isEmpty(wordsToUpdate)) {
         return;
-      } else {
-        return WordTextService.updateOrder(wordsToUpdate);
       }
+      WordTextService.updateOrder(wordsToUpdate);
     })
     .then(() => {
       // Retrieve newly updated list of words for this text:
-      return TextService.getWords(req.params.id).then(words => {
+      TextService.getWords(req.params.id).then(words => {
+        // BUG words is not taken after those updates
         return res.status(200).json({ words });
       });
     });
@@ -230,30 +223,30 @@ router.put('/:id/words', authenticate, (req, res) => {
 
 router.get('/:id/suggestions/:number/:currentUserId', authenticate, (req, res) => {
   const textId = req.params.id;
-  const number = req.params.number;
+  // const number = req.params.number;
   const currentUserId = req.params.currentUserId;
-  let suggestedChars = [];
+  const suggestedChars = [];
   let suggestedWords = [];
 
   // TODO: Handle the case where number !== 0, with suggestedChars
   // TODO: Return elements with status ("Suggestion" or "From {origin}")
-  User.findOne({
+  models.user.findOne({
     where: { id: currentUserId }
   }).then((user) => {
-    Text.findOne({
+    models.text.findOne({
       where: { id: textId }
     }).then((text) => {
       // Find all the previously used chars until this text (included)
-      Char.findAll({
+      models.char.findAll({
         attributes: ['id'],
         include: [{
-          model: Text,
+          model: models.text,
           where: { order: { $lte: text.order } }
         }]
       }).then((chars) => {
         // Find all the words with at least one previously used chars
         const usedChars = chars.map(c => c.id);
-        Word.findAll({
+        models.word.findAll({
           where: models.sequelize.and(
             models.sequelize.where(
               models.sequelize.fn(
@@ -265,27 +258,27 @@ router.get('/:id/suggestions/:number/:currentUserId', authenticate, (req, res) =
             { banned: { $not: true } }
           ),
           include: [{
-            model: Char,
+            model: models.char,
             where: { id: { $in: usedChars } }
           }, {
-            model: Text
+            model: models.text
           }]
         }).then((words) => {
           // Keep only words built only with previously used chars
-          words = words.filter(w => {
+          filteredWords = words.filter(w => {
             let keep = true;
-            let wordChars = w.chinese.split('');
-            let usedCharsInWord = w.chars.map(c => c.chinese);
+            const wordChars = w.chinese.split('');
+            const usedCharsInWord = w.chars.map(c => c.chinese);
             wordChars.forEach(c => {
               if (usedCharsInWord.indexOf(c) === -1) {
-                return keep = false;
+                keep = false;
               }
               return;
             });
             return keep;
           });
           // Filter out words having a text with order $lte text.order
-          words = words.filter(w => {
+          filteredWords = filteredWords.filter(w => {
             let keep = true;
             w.texts.forEach(t => {
               if (t.order <= text.order) {
@@ -295,10 +288,12 @@ router.get('/:id/suggestions/:number/:currentUserId', authenticate, (req, res) =
             return keep;
           });
           // Send back an array of Chinese words and Ids
-          words = words.sort((a, b) => {
+          filteredWords = filteredWords.sort((a, b) => {
             return a.frequency - b.frequency;
           });
-          suggestedWords = words.map(w => { return { id: w.id, chinese: w.chinese }; });
+          suggestedWords = filteredWords.map(w => {
+            return { id: w.id, chinese: w.chinese };
+          });
           return res.status(200).json({
             chars: suggestedChars,
             words: suggestedWords,
@@ -308,7 +303,6 @@ router.get('/:id/suggestions/:number/:currentUserId', authenticate, (req, res) =
       });
     });
   });
-
 });
 
 export default router;
