@@ -1,5 +1,5 @@
-var Liana = require('forest-express-sequelize');
-var models = require('../src/models');
+const Liana = require('forest-express-sequelize');
+const models = require('../src/models');
 const _ = require('lodash');
 
 Liana.collection('word', {

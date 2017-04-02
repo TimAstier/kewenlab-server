@@ -1,7 +1,6 @@
-import config from './config/config';
+import config from './config/config'; // eslint-disable-line no-unused-vars
 
 import express from 'express';
-import path from 'path';
 import bodyParser from 'body-parser';
 
 import { sequelize } from './models';

@@ -2,7 +2,7 @@ import express from 'express';
 
 import models from '../models';
 
-let router = express.Router();
+const router = express.Router();
 
 function linkWord(word) {
   const chars = word.chinese.split('');
@@ -10,19 +10,19 @@ function linkWord(word) {
   models.char.findAll({
     where: { chinese: { $in: chars } }
   }).then(chars => {
-    let newCharWords = [];
+    const newCharWords = [];
     chars.forEach(c => {
       newCharWords.push({
         charId: c.id,
         wordId: word.id
       });
     });
-    console.log(word.id);
+    // console.log(word.id);
     return CharWord.bulkCreate(newCharWords);
   });
 }
 
-router.get('/', (req, res) => {
+router.get('/', () => {
   model.word.findAll().then(words => {
     words.forEach(w => {
       linkWord(w);
@@ -30,7 +30,7 @@ router.get('/', (req, res) => {
   });
 });
 
-router.get('/:id', (req, res) => {
+router.get('/:id', () => {
   const id = req.params.id;
   model.word.findOne({
     where: { id: id }

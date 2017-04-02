@@ -4,7 +4,7 @@
  * directory.
  */
 
-module.exports = function(app) {
+module.exports = function(app) { // eslint-disable-line func-names
   // Load the route files.
   require('./words')(app);
   require('./tokenizer')(app);

@@ -5,6 +5,6 @@ function tokenize(request, result) {
   result.send(nodejieba.cut(request.body.content));
 }
 
-module.exports = function(app) {
+module.exports = function(app) { // eslint-disable-line func-names
   app.post('/api/tokenizer', authenticate, tokenize);
 };

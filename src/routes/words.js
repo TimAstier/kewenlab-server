@@ -9,6 +9,6 @@ function ban(request, response, next) {
     .catch(next);
 }
 
-module.exports = function(app) {
+module.exports = function(app) { // eslint-disable-line func-names
   app.put('/api/words/:wordId/ban', ban);
 };

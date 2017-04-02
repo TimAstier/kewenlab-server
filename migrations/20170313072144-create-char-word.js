@@ -12,7 +12,7 @@ module.exports = {
     });
   },
 
-  down: function (queryInterface) {
+  down: function(queryInterface) {
     return queryInterface.dropTable('charWords');
   }
 };
