@@ -16,6 +16,15 @@ git push production master
 heroku addons:create heroku-postgresql:hobby-dev --remote production
 ```
 
+## Database
+Daily backups are scheduled in staging and prod at 02:00 America/Los_Angeles.
+Restore Heroku dump in local DB:
+```
+// If starting from existing DB
+$ sequelize db:migrate:undo:all
+$ pg_restore --verbose --clean --no-acl --no-owner -h localhost -U username -d dbname latest.dump
+```
+
 ## Database seed for chars and words
 ```js
 /** connect to DB **/
@@ -58,8 +67,8 @@ heroku pg:psql --remote production // production
 - production - https://kewen-lab-server.herokuapp.com
 
 ## Misc
-- Upgrading Heroku Postgres DB: https://devcenter.heroku.com/articles/upgrading-heroku-postgres-databases
-- Daily backups are scheduled in staging and prod at 02:00 America/Los_Angeles
+- [Upgrading Heroku Postgres DB](https://devcenter.heroku.com/articles/upgrading-heroku-postgres-databases)
+- [Heroku Postgres Import/Export](https://devcenter.heroku.com/articles/heroku-postgres-import-export)
 
 ## TODO
 - [x] Link words to chars offline and get the result in a data file.

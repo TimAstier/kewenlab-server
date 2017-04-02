@@ -1,14 +1,12 @@
+/* eslint-disable func-names */
 'use strict';
 
 module.exports = {
-  up: function (queryInterface, Sequelize) {
+  up: function(queryInterface) {
     return queryInterface.removeColumn('users', 'timezone');
   },
 
-  down: function (queryInterface, Sequelize) {
-    return queryInterface.addColumn('users', 'timezone', {
-      type: Sequelize.STRING,
-      allowNull: false
-    });
+  down: function(queryInterface, Sequelize) {
+    return queryInterface.addColumn('users', 'timezone', Sequelize.STRING);
   }
 };
