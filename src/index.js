@@ -8,8 +8,8 @@ import { sequelize } from './models';
 import users from './routes/users';
 import auth from './routes/auth';
 import texts from './routes/texts';
-import tokenizer from './routes/tokenizer';
 import scripts from './routes/scripts';
+import { tokenizer } from './routes';
 import { words } from './routes';
 
 let app = express();
@@ -35,9 +35,9 @@ app.use(function(req, res, next) {
 app.use('/api/users', users);
 app.use('/api/auth', auth);
 app.use('/api/texts', texts);
-app.use('/api/tokenizer', tokenizer);
 app.use('/api/scripts', scripts);
 words(app);
+tokenizer(app);
 
 const port = process.env.PORT || 8080;
 

@@ -1,14 +1,10 @@
-import express from 'express';
 import authenticate from '../middlewares/authenticate.js';
 import nodejieba from 'nodejieba';
 
-const router = express.Router();
+function tokenize(request, result) {
+  result.send(nodejieba.cut(request.body.content));
+}
 
-router.post('/', authenticate, (req, res) => {
-  const { content } = req.body;
-  const result = nodejieba.cut(content);
-  res.send(result);
-});
-
-
-export default router;
+export default function(app) {
+  app.post('/api/tokenizer', authenticate, tokenize);
+}
