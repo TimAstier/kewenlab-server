@@ -10,6 +10,17 @@ export default (sequelize, DataTypes) => {
     classMethods: {
       associate: () => {
       }
+    },
+    instanceMethods: {
+      hideWord(wordId) {
+        if (this.hidden_words.indexOf(wordId) === -1) {
+          this.hidden_words.push(parseInt(wordId, 10));
+          return this.update({
+            hidden_words: this.hidden_words
+          });
+        }
+        return false;
+      }
     }
   });
   return User;

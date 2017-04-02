@@ -5,14 +5,11 @@ import path from 'path';
 import bodyParser from 'body-parser';
 
 import { sequelize } from './models';
-import users from './routes/users';
 import auth from './routes/auth';
 import texts from './routes/texts';
 import scripts from './routes/scripts';
-import { tokenizer } from './routes';
-import { words } from './routes';
 
-let app = express();
+const app = express();
 
 app.use(bodyParser.json());
 
@@ -25,20 +22,18 @@ app.use(require('forest-express-sequelize').init({
 }));
 
 // Enable CORS to allow requests from the client
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", process.env.CLIENT_URL);
-  res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+app.use((request, response, next) => {
+  response.header('Access-Control-Allow-Origin', process.env.CLIENT_URL);
+  response.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE');
+  response.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
   next();
 });
 
-app.use('/api/users', users);
 app.use('/api/auth', auth);
 app.use('/api/texts', texts);
 app.use('/api/scripts', scripts);
-words(app);
-tokenizer(app);
+require('./routes')(app);
 
 const port = process.env.PORT || 8080;
 
-app.listen(port, () => console.log('Server is running on port ' + port));
+app.listen(port, () => console.log('Server is running on port ' + port)); // eslint-disable-line no-console

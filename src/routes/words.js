@@ -9,6 +9,6 @@ function ban(request, response, next) {
     .catch(next);
 }
 
-export default function(app) {
+module.exports = function(app) {
   app.put('/api/words/:wordId/ban', ban);
-}
+};

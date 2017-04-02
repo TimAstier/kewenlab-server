@@ -1,87 +1,40 @@
-import express from 'express';
-import commonValidations from '../shared/validations/signup';
-import bcrypt from 'bcrypt';
-import Promise from 'bluebird';
-import isEmpty from 'lodash/isEmpty';
+import UserGetter from '../services/user-getter';
+import UserCreator from '../services/user-creator';
+import UsersGetter from '../services/users-getter';
 
-import models from '../models';
-
-const router = express.Router();
-
-function validateInput(data, otherValidations) {
-  const { errors } = otherValidations(data);
-  return Promise.all([
-    models.user
-      .findAll({ where: { email: data.email } })
-      .then(user => {
-        if (!isEmpty(user)) {
-          errors.email = 'There is user with such email';
-        }
-      }),
-    models.user
-      .findAll({ where: { username: data.username } })
-      .then(user => {
-        if (!isEmpty(user)) {
-          errors.username = 'There is user with such username';
-        }
-      })
-  ]).then(() => {
-    return {
-      errors,
-      isValid: isEmpty(errors)
-    };
-  });
+function get(request, response, next) {
+  new UsersGetter(request.params.identifier)
+    .perform()
+    .then(user => response.json({ user }))
+    .catch(next);
 }
 
-router.get('/:identifier', (req, res) => {
-  models.user
-    .findAll({
-      attributes: ['username', 'email'],
-      where: {
-        $or: [
-          { email: req.params.identifier },
-          { username: req.params.identifier }
-        ]
-      }
-    })
-    .then(user => {
-      res.json({ user });
-    });
-});
+function post(request, response, next) {
+  new UserCreator(request.body)
+    .perform()
+    .then(user => response.json({ user }))
+    .catch(next);
+}
 
-router.post('/', (req, res) => {
-  validateInput(req.body, commonValidations).then(({ errors, isValid }) => {
-    if (isValid) {
-      const { username, email, password } = req.body;
-      const active = false;
-      const password_digest = bcrypt.hashSync(password, 10); // eslint-disable-line camelcase
-
-      model.user.create({
-        username, email, password_digest, active
-      })
-      .then(user => res.json({ user }))
-      .catch(err => res.status(500).json({ error: err }));
-    } else {
-      res.status(400).json(errors);
-    }
-  });
-});
-
-router.put('/:id/hideword/:wordId', (req, res) => {
-  const { id, wordId } = req.params;
-  models.usern
-    .findOne({ where: { id: id } })
+// TODO: continue refactoring
+function hideword(request, response, next) {
+  new UserGetter(request.params.id)
+    .perform()
     .then((user) => {
-      if (user.hidden_words.indexOf(wordId) === -1) {
-        user.hidden_words.push(parseInt(wordId, 10));
-        return user.update({
-          hidden_words: user.hidden_words
-        }).then((user) => {
-          return res.status(204).send(user);
+      user
+        .hideWord(request.params.wordId)
+        .then((user) => {
+          if (user) {
+            return response.status(204).send(user);
+          }
+          return response.status(200).send('Word already hidden');
         });
-      }
-      return res.status(200).send(user);
-    });
-});
+    })
+    .catch(next);
+}
 
-export default router;
+module.exports = function(app) {
+  app.get('/api/users/:identifier', get);
+  app.post('/api/users', post);
+  app.put('/api/users/:id/hideword/:wordId', hideword);
+};
