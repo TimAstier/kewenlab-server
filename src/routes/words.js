@@ -1,19 +1,14 @@
-import express from 'express';
+import WordsBanner from '../services/words-banner';
 
-import models from '../models';
-
-const router = express.Router();
-
-router.put('/:id/ban', (req, res) => {
-  models.word
-    .findOne({ where: { id: req.params.id } })
-    .then((word) => {
-      word.banned = true;
-      return word.save();
-    })
+function ban(request, response, next) {
+  new WordsBanner(request.params.wordId)
+    .perform()
     .then(() => {
-      res.status(204).send('Word ' + req.params.id + ' banned');
-    });
-});
+      response.status(204).send('success');
+    })
+    .catch(next);
+}
 
-export default router;
+export default function(app) {
+  app.put('/api/words/:wordId/ban', ban);
+}

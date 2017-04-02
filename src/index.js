@@ -10,7 +10,7 @@ import auth from './routes/auth';
 import texts from './routes/texts';
 import tokenizer from './routes/tokenizer';
 import scripts from './routes/scripts';
-import words from './routes/words';
+import { words } from './routes';
 
 let app = express();
 
@@ -37,7 +37,7 @@ app.use('/api/auth', auth);
 app.use('/api/texts', texts);
 app.use('/api/tokenizer', tokenizer);
 app.use('/api/scripts', scripts);
-app.use('/api/words', words);
+words(app);
 
 const port = process.env.PORT || 8080;
 

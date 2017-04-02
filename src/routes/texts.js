@@ -265,7 +265,7 @@ router.get('/:id/suggestions/:number/:currentUserId', authenticate, (req, res) =
           }]
         }).then((words) => {
           // Keep only words built only with previously used chars
-          filteredWords = words.filter(w => {
+          let filteredWords = words.filter(w => {
             let keep = true;
             const wordChars = w.chinese.split('');
             const usedCharsInWord = w.chars.map(c => c.chinese);
