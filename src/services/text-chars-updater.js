@@ -1,6 +1,6 @@
 import isEmpty from 'lodash/isEmpty';
 import models from '../models';
-import CharTextService from './CharTextService';
+import CharTextService from './charText-service';
 import TextCharsGetter from './text-chars-getter';
 
 export default function TextCharsUpdater(request) {

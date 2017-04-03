@@ -18,8 +18,8 @@ function get(request, response, next) {
 
 function getAll(request, response, next) {
   TextsGetter()
-  .then(texts => response.json({ texts }))
-  .catch(next);
+    .then(texts => response.json({ texts }))
+    .catch(next);
 }
 
 function getChars(request, response, next) {
