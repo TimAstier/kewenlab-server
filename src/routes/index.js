@@ -11,4 +11,5 @@ module.exports = function(app) { // eslint-disable-line func-names
   require('./users')(app);
   require('./auth')(app);
   require('./scripts')(app);
+  require('./texts')(app);
 };

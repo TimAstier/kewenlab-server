@@ -1,4 +1,3 @@
-import express from 'express';
 import authenticate from '../middlewares/authenticate.js';
 import isEmpty from 'lodash/isEmpty';
 
@@ -9,9 +8,7 @@ import CharTextService from '../services/CharTextService';
 import WordTextService from '../services/WordTextService';
 import CharsGetter from '../services/chars-getter';
 
-const router = express.Router();
-
-router.get('/', authenticate, (req, res) => {
+function getAll(req, res) {
   models.text
     .findAll({
       attributes: ['id', 'order', 'title'],
@@ -22,9 +19,9 @@ router.get('/', authenticate, (req, res) => {
     .then(texts => {
       res.json({ texts });
     });
-});
+}
 
-router.get('/:id', authenticate, (req, res) => {
+function get(req, res) {
   models.text
     .findOne({
       where: { id: req.params.id },
@@ -33,21 +30,21 @@ router.get('/:id', authenticate, (req, res) => {
     .then(text => {
       res.json({ text });
     });
-});
+}
 
-router.get('/:id/chars', authenticate, (req, res) => {
+function getChars(req, res) {
   return TextService.getChars(req.params.id).then(chars => {
     return res.status(200).json({ chars });
   });
-});
+}
 
-router.get('/:id/words', authenticate, (req, res) => {
+function getWords(req, res) {
   return TextService.getWords(req.params.id).then(words => {
     return res.status(200).json({ words });
   });
-});
+}
 
-router.put('/:id', authenticate, (req, res) => {
+function update(req, res) {
   const { content } = req.body;
   models.text
     .update(
@@ -57,9 +54,9 @@ router.put('/:id', authenticate, (req, res) => {
     .then(() => {
       res.status(200).json({ success: true });
     });
-});
+}
 
-router.post('/', authenticate, (req, res) => {
+function create(req, res) {
   models.text
     .max('order')
     .then((maxOrder) => {
@@ -76,9 +73,9 @@ router.post('/', authenticate, (req, res) => {
         res.status(500).json({ errors: 'Could not create text' });
       });
     });
-});
+}
 
-router.put('/:id/chars', authenticate, (req, res) => {
+function updateChars(req, res) {
   const { newChars, charsToDelete, charsToUpdate } = req.body;
   let charTextsToAdd = [];
   // Find in DB all newChars for this text:
@@ -147,9 +144,9 @@ router.put('/:id/chars', authenticate, (req, res) => {
           return res.status(200).json({ chars });
         });
     });
-});
+}
 
-router.put('/:id/words', authenticate, (req, res) => {
+function updateWords(req, res) {
   const { newWords, wordsToDelete, wordsToUpdate } = req.body;
   let wordTextsToAdd = [];
   // Find in DB all newWords for this text:
@@ -217,11 +214,11 @@ router.put('/:id/words', authenticate, (req, res) => {
         return res.status(200).json({ words });
       });
     });
-});
+}
 
 // TODO: Link words to chars when adding new words
 
-router.get('/:id/suggestions/:number/:currentUserId', authenticate, (req, res) => {
+function getSuggestions(req, res) {
   const textId = req.params.id;
   // const number = req.params.number;
   const currentUserId = req.params.currentUserId;
@@ -303,6 +300,16 @@ router.get('/:id/suggestions/:number/:currentUserId', authenticate, (req, res) =
       });
     });
   });
-});
+}
 
-export default router;
+module.exports = function(app) { // eslint-disable-line func-names
+  app.get('/api/texts', authenticate, getAll);
+  app.get('/api/texts/:id', authenticate, get);
+  app.get('/api/texts/:id/chars', authenticate, getChars);
+  app.get('/api/texts/:id/words', authenticate, getWords);
+  app.put('/api/texts/:id', authenticate, update);
+  app.post('/api/texts', authenticate, create);
+  app.put('/api/texts/:id/chars', authenticate, updateChars);
+  app.put('/api/texts/:id/words', authenticate, updateWords);
+  app.get('/api/texts/:id/suggestions/:number/:currentUserId', authenticate, getSuggestions);
+};
