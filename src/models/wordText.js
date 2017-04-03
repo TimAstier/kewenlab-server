@@ -2,11 +2,21 @@ export default (sequelize, DataTypes) => {
   const models = sequelize.models;
   const WordText = sequelize.define('wordText', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    order: { type: DataTypes.INTEGER },
     wordId: { type: DataTypes.INTEGER },
     textId: { type: DataTypes.INTEGER },
-    manuallyAdded: { type: DataTypes.BOOLEAN },
-    manuallyDeleted: { type: DataTypes.BOOLEAN }
+    order: { type: DataTypes.INTEGER },
+    // The following constraints are important
+    // Removing them creates a bug when saving items with an important DB
+    manuallyAdded: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true
+    },
+    manuallyDeleted: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false
+    }
   }, {
     classMethods: {
       associate: () => {
