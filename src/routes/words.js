@@ -1,11 +1,8 @@
 import WordsBanner from '../services/words-banner';
 
 function ban(request, response, next) {
-  new WordsBanner(request.params.wordId)
-    .perform()
-    .then(() => {
-      response.status(204).send('success');
-    })
+  WordsBanner(request.params.wordId)
+    .then(() => response.status(204).send('success'))
     .catch(next);
 }
 

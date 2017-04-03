@@ -3,23 +3,20 @@ import UserCreator from '../services/user-creator';
 import UsersGetter from '../services/users-getter';
 
 function get(request, response, next) {
-  new UsersGetter(request.params.identifier)
-    .perform()
+  UsersGetter(request.params.identifier)
     .then(user => response.json({ user }))
     .catch(next);
 }
 
 function post(request, response, next) {
-  new UserCreator(request.body)
-    .perform()
+  UserCreator(request.body)
     .then(user => response.json({ user }))
     .catch(next);
 }
 
 // TODO: continue refactoring
 function hideword(request, response, next) {
-  new UserGetter(request.params.id)
-    .perform()
+  UserGetter(request.params.id)
     .then((user) => {
       user
         .hideWord(request.params.wordId)

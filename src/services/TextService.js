@@ -1,5 +1,7 @@
 import models from '../models';
 
+// TODO: Move this into Text instance methods
+
 export default {
   getChars: (textId) => {
     return models.text
