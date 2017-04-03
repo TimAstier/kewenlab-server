@@ -16,18 +16,11 @@ function post(request, response, next) {
     .catch(next);
 }
 
-// TODO: continue refactoring
 function hideword(request, response, next) {
   UserGetter(request.params.id)
-    .then((user) => {
-      user
-        .hideWord(request.params.wordId)
-        .then((user) => {
-          if (user) {
-            return response.status(204).send(user);
-          }
-          return response.status(200).send('Word already hidden');
-        });
+    .then(user => {
+      return user.hideWord(request.params.wordId)
+        .then((user) => response.status(204).send(user));
     })
     .catch(next);
 }
