@@ -1,9 +1,11 @@
 import UserGetter from '../services/user-getter';
 import UserCreator from '../services/user-creator';
 import UsersGetter from '../services/users-getter';
+import UserSerializer from '../serializers/users';
 
 function get(request, response, next) {
   UsersGetter(request.params.identifier)
+    .then(users => UserSerializer(users[0]))
     .then(user => response.json({ user }))
     .catch(next);
 }

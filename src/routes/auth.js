@@ -1,43 +1,34 @@
-import express from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import isEmpty from 'lodash/isEmpty';
 
-import models from '../models';
+import UsersGetter from '../services/users-getter';
 
-const router = express.Router();
-
-router.post('/', (req, res) => {
-  const { identifier, password } = req.body;
-  models.user
-    .findAll({
-      where: {
-        $or: [
-          { username: identifier },
-          { email: identifier }
-        ]
-      }
-    })
+function getToken(request, response, next) {
+  const { identifier, password } = request.body;
+  UsersGetter(identifier)
     .then(foundUser => {
       if (!isEmpty(foundUser)) {
         const user = foundUser[0];
         if (bcrypt.compareSync(password, user.get('password_digest'))) {
           if (user.active === false) {
-            res.status(403).json({ errors: { form: 'Account not activated. Please contact Tim.' } });
-            return;
+            throw { status: 403, message: 'Account not activated.' };
           }
           const token = jwt.sign({
             id: user.get('id'),
             username: user.get('username')
           }, process.env.JWT_SECRET);
-          res.json({ token });
+          response.json({ token });
         } else {
-          res.status(401).json({ errors: { form: 'Invalid Credentials' } });
+          throw { status: 401, message: 'Invalid Credentials' };
         }
       } else {
-        res.status(401).json({ errors: { form: 'Invalid Credentials' } });
+        throw { status: 401, message: 'Invalid Credentials' };
       }
-    });
-});
+    })
+    .catch(next);
+}
 
-export default router;
+module.exports = function(app) { // eslint-disable-line func-names
+  app.post('/api/auth', getToken);
+};

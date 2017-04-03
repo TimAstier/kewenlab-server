@@ -4,7 +4,6 @@ import express from 'express';
 import bodyParser from 'body-parser';
 
 import { sequelize } from './models';
-import auth from './routes/auth';
 import texts from './routes/texts';
 import scripts from './routes/scripts';
 
@@ -28,10 +27,26 @@ app.use((request, response, next) => {
   next();
 });
 
-app.use('/api/auth', auth);
 app.use('/api/texts', texts);
 app.use('/api/scripts', scripts);
 require('./routes')(app);
+
+// Errors handling
+app.use((err, req, res, next) => {
+  let { message } = err;
+  const { status } = err;
+
+  // NOTICE: Display the first error message if it is a Sequelize validation
+  //         error message.
+  if (err && err.errors && err.errors[0] && err.errors[0].message) {
+    message = err.errors[0].message;
+  }
+
+  res
+    .status(err.status || 400)
+    .send({ errors: [{ status, message }] });
+  next(err);
+});
 
 const port = process.env.PORT || 8080;
 
