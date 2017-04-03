@@ -32,7 +32,7 @@ function hideword(request, response, next) {
     .catch(next);
 }
 
-module.exports = function(app) { // eslint-disable-line func-names
+module.exports = app => {
   app.get('/api/users/:identifier', get);
   app.post('/api/users', post);
   app.put('/api/users/:id/hideword/:wordId', hideword);

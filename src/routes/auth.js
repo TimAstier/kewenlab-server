@@ -29,6 +29,6 @@ function getToken(request, response, next) {
     .catch(next);
 }
 
-module.exports = function(app) { // eslint-disable-line func-names
+module.exports = app => {
   app.post('/api/auth', getToken);
 };

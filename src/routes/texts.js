@@ -302,7 +302,7 @@ function getSuggestions(req, res) {
   });
 }
 
-module.exports = function(app) { // eslint-disable-line func-names
+module.exports = app => {
   app.get('/api/texts', authenticate, getAll);
   app.get('/api/texts/:id', authenticate, get);
   app.get('/api/texts/:id/chars', authenticate, getChars);

@@ -6,6 +6,6 @@ function tokenize(request, result, next) {
   next();
 }
 
-module.exports = function(app) { // eslint-disable-line func-names
+module.exports = app => {
   app.post('/api/tokenizer', authenticate, tokenize);
 };

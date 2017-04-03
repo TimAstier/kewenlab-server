@@ -19,7 +19,7 @@ function linkWord(request, response, next) {
     .catch(next);
 }
 
-module.exports = function(app) { // eslint-disable-line func-names
+module.exports = app => {
   app.get('/api/scripts/linkwords', linkAllWords);
   app.get('/api/scripts/linkwords/:id', linkWord);
 };
