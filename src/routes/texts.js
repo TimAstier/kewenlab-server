@@ -6,8 +6,8 @@ import TextCreator from '../services/text-creator';
 import TextContentUpdater from '../services/text-content-updater';
 import TextGetter from '../services/text-getter';
 import TextsGetter from '../services/texts-getter';
-import TextCharsUpdater from '../services/text-chars-updater';
-import TextWordsUpdater from '../services/text-words-updater';
+import TextCharsUpdater from '../services/textChars-updater';
+import TextWordsUpdater from '../services/textWords-updater';
 import TextSuggestionsGetter from '../services/text-suggestions-getter';
 
 function get(request, response, next) {
@@ -54,7 +54,6 @@ function updateChars(request, result, next) {
 
 function updateWords(request, result, next) {
   TextWordsUpdater(request)
-    // BUG words is not taken after those updates
     .then(words => result.status(200).json(words))
     .catch(next);
 }

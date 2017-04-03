@@ -26,16 +26,16 @@ export default function TextCharsUpdater(request) {
         return (words.map(word => word.chinese).indexOf(x.chinese) === -1);
       });
       if (isEmpty(notFoundWords)) {
-        return;
+        return true;
       }
       notFoundWords = notFoundWords.map(x => {
         return { chinese: x.chinese };
       });
-      models.word
-          .bulkCreate(notFoundWords, {returning: true})
+      return models.word
+          .bulkCreate(notFoundWords, { returning: true })
           .then((createdWords) => {
           // Add wordTexts to wordTextsToAdd with IDs of newly created words:
-            return wordTextsToAdd.concat(
+            wordTextsToAdd = wordTextsToAdd.concat(
               createdWords.map(x => {
                 return {
                   wordId: x.id,
@@ -45,6 +45,7 @@ export default function TextCharsUpdater(request) {
                 };
               })
             );
+            return wordTextsToAdd;
           });
     })
     .then(() => {
@@ -55,16 +56,16 @@ export default function TextCharsUpdater(request) {
     .then(() => {
       // Destroy wordTexts in DB:
       if (isEmpty(wordsToDelete)) {
-        return;
+        return true;
       }
-      WordTextService.destroyWordsToDelete(wordsToDelete);
+      return WordTextService.destroyWordsToDelete(wordsToDelete);
     })
     .then(() => {
       // Update wordTexts in DB:
       if (isEmpty(wordsToUpdate)) {
-        return;
+        return true;
       }
-      WordTextService.updateOrder(wordsToUpdate);
+      return WordTextService.updateOrder(wordsToUpdate);
     })
     .then(() => {
       // Retrieve newly updated list of chars for this text:

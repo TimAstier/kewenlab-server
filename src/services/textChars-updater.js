@@ -26,16 +26,16 @@ export default function TextCharsUpdater(request) {
         return (chars.map(char => char.chinese).indexOf(x.chinese) === -1);
       });
       if (isEmpty(notFoundChars)) {
-        return;
+        return true;
       }
       notFoundChars = notFoundChars.map(x => {
         return { chinese: x.chinese };
       });
-      models.char
-          .bulkCreate(notFoundChars, {returning: true})
+      return models.char
+          .bulkCreate(notFoundChars, { returning: true })
           .then((createdChars) => {
           // Add charTexts to charTextsToAdd with IDs of newly created chars:
-            return charTextsToAdd.concat(
+            charTextsToAdd = charTextsToAdd.concat(
               createdChars.map(x => {
                 return {
                   charId: x.id,
@@ -45,6 +45,7 @@ export default function TextCharsUpdater(request) {
                 };
               })
             );
+            return charTextsToAdd;
           });
     })
     .then(() => {
@@ -54,16 +55,16 @@ export default function TextCharsUpdater(request) {
     .then(() => {
       // Destroy charTexts in DB:
       if (isEmpty(charsToDelete)) {
-        return;
+        return true;
       }
-      CharTextService.destroyCharsToDelete(charsToDelete);
+      return CharTextService.destroyCharsToDelete(charsToDelete);
     })
     .then(() => {
       // Update charTexts in DB:
       if (isEmpty(charsToUpdate)) {
-        return;
+        return true;
       }
-      CharTextService.updateOrder(charsToUpdate);
+      return CharTextService.updateOrder(charsToUpdate);
     })
     .then(() => {
       // Retrieve newly updated list of chars for this text:
