@@ -10,4 +10,5 @@ module.exports = function(app) { // eslint-disable-line func-names
   require('./tokenizer')(app);
   require('./users')(app);
   require('./auth')(app);
+  require('./scripts')(app);
 };

@@ -5,7 +5,6 @@ import bodyParser from 'body-parser';
 
 import { sequelize } from './models';
 import texts from './routes/texts';
-import scripts from './routes/scripts';
 
 const app = express();
 
@@ -28,7 +27,6 @@ app.use((request, response, next) => {
 });
 
 app.use('/api/texts', texts);
-app.use('/api/scripts', scripts);
 require('./routes')(app);
 
 // Errors handling
