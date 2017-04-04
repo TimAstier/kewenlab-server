@@ -34,9 +34,19 @@ function favoriteWord(request, response, next) {
     .catch(next);
 }
 
+function unfavoriteWord(request, response, next) {
+  UserGetter(request.params.id)
+    .then(user => {
+      return user.unfavoriteWord(request.params.wordId)
+        .then((user) => response.status(204).send(user));
+    })
+    .catch(next);
+}
+
 module.exports = app => {
   app.get('/api/users/:identifier', get);
   app.post('/api/users', post);
   app.put('/api/users/:id/hideword/:wordId', hideWord);
   app.put('/api/users/:id/favoriteword/:wordId', favoriteWord);
+  app.put('/api/users/:id/unfavoriteword/:wordId', unfavoriteWord);
 };
