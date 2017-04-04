@@ -22,7 +22,11 @@ export default function TextSuggestionsGetter(textId, userId) {
           where: { order: { $lte: text.order } }
         }]
       }).then((chars) => {
-        // Find all the words with at least one previously used chars
+        // Find all the words ...
+          // with at least one previously used chars
+          // filter out banned words
+          // filter out hidden words
+          // filter out words with no frequency information
         const usedChars = chars.map(c => c.id);
         return models.word.findAll({
           where: models.sequelize.and(
@@ -32,6 +36,7 @@ export default function TextSuggestionsGetter(textId, userId) {
               ),
               { $gt: 1 }
             ),
+            { id: { $notIn: user.get('hidden_words') } },
             { frequency: { $ne: 999999 } },
             { banned: { $not: true } }
           ),
@@ -52,8 +57,7 @@ export default function TextSuggestionsGetter(textId, userId) {
           });
           return {
             chars: suggestedChars,
-            words: suggestedWords,
-            hiddenWords: user.get('hidden_words')
+            words: suggestedWords
           };
         });
       });
