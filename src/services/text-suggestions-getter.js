@@ -1,5 +1,7 @@
+/* eslint-disable camelcase */
 import models from '../models';
 import * as wordsUtils from '../utils/wordsUtils';
+import isEmpty from 'lodash/isEmpty';
 
 export default function TextSuggestionsGetter(textId, userId) {
   const suggestedChars = [];
@@ -11,6 +13,11 @@ export default function TextSuggestionsGetter(textId, userId) {
   return models.user.findOne({
     where: { id: userId }
   }).then((user) => {
+    const { favorite_words } = user.get({ plain: true });
+    let { hidden_words } = user.get({ plain: true });
+    // Workaround to avoid Sequelize bug with $notIn and empty arrays
+    // https://github.com/sequelize/sequelize/pull/4860
+    if (isEmpty(hidden_words)) { hidden_words = [0]; }
     return models.text.findOne({
       where: { id: textId }
     }).then((text) => {
@@ -36,7 +43,7 @@ export default function TextSuggestionsGetter(textId, userId) {
               ),
               { $gt: 1 }
             ),
-            { id: { $notIn: user.get('hidden_words') } },
+            { id: { $notIn: hidden_words } },
             { frequency: { $ne: 999999 } },
             { banned: { $not: true } }
           ),
@@ -51,9 +58,14 @@ export default function TextSuggestionsGetter(textId, userId) {
           let filteredWords = wordsUtils.filterFullyMatchingWords(words);
           filteredWords = wordsUtils.filterNonUsedWords(filteredWords, text.order);
           filteredWords = wordsUtils.orderByFrequency(filteredWords);
-          // Send back an array of Chinese words and Ids
+          // Send back an array of Chinese words, Ids and favorite info
           suggestedWords = filteredWords.map(w => {
-            return { id: w.id, chinese: w.chinese };
+            const favorite = favorite_words.indexOf(w.id) !== -1;
+            return {
+              id: w.id,
+              chinese: w.chinese,
+              favorite
+            };
           });
           return {
             chars: suggestedChars,

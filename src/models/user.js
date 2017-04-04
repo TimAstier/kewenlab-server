@@ -5,7 +5,8 @@ export default (sequelize, DataTypes) => {
     email: { type: DataTypes.STRING },
     password_digest: { type: DataTypes.STRING },
     active: { type: DataTypes.BOOLEAN, defaultValue: false },
-    hidden_words: { type: DataTypes.ARRAY(DataTypes.INTEGER), defaultValue: [] }
+    hidden_words: { type: DataTypes.ARRAY(DataTypes.INTEGER), defaultValue: [] },
+    favorite_words: { type: DataTypes.ARRAY(DataTypes.INTEGER), defaultValue: [] }
   }, {
     classMethods: {
       associate: () => {
