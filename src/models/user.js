@@ -32,8 +32,6 @@ export default (sequelize, DataTypes) => {
         throw { status: 400, message: 'Word ' + wordId + ' already favorited' };
       },
       unfavoriteWord(wordId) {
-        console.log(wordId)
-        console.log(this.get('favorite_words'))
         if (this.get('favorite_words').indexOf(Number(wordId)) !== -1) {
           const updatedList = this.favorite_words.filter(id => id !== Number(wordId));
           return this.update({
