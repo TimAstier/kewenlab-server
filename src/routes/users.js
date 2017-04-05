@@ -43,18 +43,10 @@ function unfavoriteWord(request, response, next) {
     .catch(next);
 }
 
-function getProjects(request, response, next) {
-  UserGetter(request.params.id)
-    .then(user => user.getProjects())
-    .then(projects => response.json({ projects }))
-    .catch(next);
-}
-
 module.exports = app => {
   app.get('/api/users/:identifier', get);
   app.post('/api/users', post);
   app.put('/api/users/:id/hideword/:wordId', hideWord);
   app.put('/api/users/:id/favoriteword/:wordId', favoriteWord);
   app.put('/api/users/:id/unfavoriteword/:wordId', unfavoriteWord);
-  app.get('/api/users/:id/projects', getProjects);
 };
