@@ -66,10 +66,6 @@ heroku pg:psql --remote production // production
 - staging - https://damp-shelf-57274.herokuapp.com
 - production - https://kewen-lab-server.herokuapp.com
 
-## Misc
-- [Upgrading Heroku Postgres DB](https://devcenter.heroku.com/articles/upgrading-heroku-postgres-databases)
-- [Heroku Postgres Import/Export](https://devcenter.heroku.com/articles/heroku-postgres-import-export)
-
 ## TODO
 - [x] Link words to chars offline and get the result in a data file.
 - [x] Schedule DB backups
