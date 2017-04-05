@@ -10,6 +10,7 @@ export default (sequelize, DataTypes) => {
   }, {
     classMethods: {
       associate: () => {
+        User.hasMany(models.Text);
       }
     },
     instanceMethods: {

@@ -13,6 +13,7 @@ export default (sequelize, DataTypes) => {
         Text.hasMany(models.wordText, { onDelete: 'cascade', hooks: true });
         Text.belongsToMany(models.char, { through: 'charText' });
         Text.hasMany(models.charText, { onDelete: 'cascade', hooks: true });
+        Text.belongsTo(models.user);
       }
     }
   });
