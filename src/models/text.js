@@ -14,6 +14,8 @@ export default (sequelize, DataTypes) => {
         Text.belongsToMany(models.char, { through: 'charText' });
         Text.hasMany(models.charText, { onDelete: 'cascade', hooks: true });
         Text.belongsTo(models.user);
+        Text.belongsToMany(models.project, { through: 'textProject' });
+        Text.hasMany(models.textProject, { onDelete: 'cascade', hooks: true });
       }
     }
   });
