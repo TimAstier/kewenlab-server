@@ -1,5 +1,15 @@
 module.exports = {
   ref: 'id',
-  attributes: ['title', 'userId'],
-  keyForAttribute: 'camelCase'
+  attributes: ['title', 'user', 'texts'],
+  keyForAttribute: 'camelCase',
+  user: {
+    ref: 'id',
+    attributes: ['username'],
+    include: false
+  },
+  texts: {
+    ref: 'id',
+    attributes: ['title'],
+    include: false
+  }
 };
