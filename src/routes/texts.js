@@ -5,7 +5,6 @@ import TextWordsGetter from '../services/text-words-getter';
 import TextCreator from '../services/text-creator';
 import TextContentUpdater from '../services/text-content-updater';
 import TextGetter from '../services/text-getter';
-import TextsGetter from '../services/texts-getter';
 import TextCharsUpdater from '../services/textChars-updater';
 import TextWordsUpdater from '../services/textWords-updater';
 import TextSuggestionsGetter from '../services/text-suggestions-getter';
@@ -13,12 +12,6 @@ import TextSuggestionsGetter from '../services/text-suggestions-getter';
 function get(request, response, next) {
   TextGetter(request.params.id)
     .then(text => response.json({ text }))
-    .catch(next);
-}
-
-function getAll(request, response, next) {
-  TextsGetter()
-    .then(texts => response.json({ texts }))
     .catch(next);
 }
 
@@ -66,7 +59,6 @@ function getSuggestions(request, result, next) {
 
 module.exports = app => {
   app.get('/api/texts/:id', authenticate, get);
-  app.get('/api/texts', authenticate, getAll);
   app.get('/api/texts/:id/chars', authenticate, getChars);
   app.get('/api/texts/:id/words', authenticate, getWords);
   app.put('/api/texts/:id', authenticate, update);

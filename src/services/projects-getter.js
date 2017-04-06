@@ -8,6 +8,7 @@ export default function ProjectsGetter(userId) {
         model: models.user
       }, {
         model: models.text
-      }]
+      }],
+      order: [['updatedAt', 'DESC']]
     });
 }
