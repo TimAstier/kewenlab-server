@@ -4,7 +4,7 @@ import CharTextService from './charText-service';
 import TextCharsGetter from './text-chars-getter';
 
 export default function TextCharsUpdater(request) {
-  const { newChars, charsToDelete, charsToUpdate } = request.body;
+  const { newChars, charsToDelete, charsToUpdate, projectId } = request.body;
   const textId = request.params.id;
   let charTextsToAdd = [];
   // Find in DB all newChars for this text:
@@ -68,6 +68,6 @@ export default function TextCharsUpdater(request) {
     })
     .then(() => {
       // Retrieve newly updated list of chars for this text:
-      return TextCharsGetter(textId);
+      return TextCharsGetter(textId, projectId);
     });
 }

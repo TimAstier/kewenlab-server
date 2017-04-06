@@ -4,7 +4,7 @@ import WordTextService from './wordText-service';
 import TextWordsGetter from './text-words-getter';
 
 export default function TextCharsUpdater(request) {
-  const { newWords, wordsToDelete, wordsToUpdate } = request.body;
+  const { newWords, wordsToDelete, wordsToUpdate, projectId } = request.body;
   const textId = request.params.id;
   let wordTextsToAdd = [];
   // Find in DB all newWords for this text:
@@ -69,6 +69,6 @@ export default function TextCharsUpdater(request) {
     })
     .then(() => {
       // Retrieve newly updated list of chars for this text:
-      return TextWordsGetter(textId);
+      return TextWordsGetter(textId, projectId);
     });
 }
