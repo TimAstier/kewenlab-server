@@ -16,7 +16,7 @@ function get(request, response, next) {
 }
 
 function getChars(request, response, next) {
-  TextCharsGetter(request.params.id)
+  TextCharsGetter(request.params.id, request.params.projectId)
     .then(chars => response.status(200).json({ chars }))
     .catch(next);
 }
@@ -59,7 +59,7 @@ function getSuggestions(request, result, next) {
 
 module.exports = app => {
   app.get('/api/texts/:id', authenticate, get);
-  app.get('/api/texts/:id/chars', authenticate, getChars);
+  app.get('/api/texts/:id/chars/:projectId', authenticate, getChars);
   app.get('/api/texts/:id/words', authenticate, getWords);
   app.put('/api/texts/:id', authenticate, update);
   app.post('/api/texts', authenticate, create);
