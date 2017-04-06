@@ -1,6 +1,6 @@
 import models from '../models';
 
-export default function TextWordsGetter(textId) {
+export default function TextWordsGetter(textId, projectId) {
   return models.text
     .findOne({ where: { id: textId } })
     .then(text => {
@@ -12,12 +12,20 @@ export default function TextWordsGetter(textId) {
           // Avoid taking texts on which the item was manuallyDeleted
           // This allow to correctly calculate origin status
           through: { where: { manuallyDeleted: false } },
-          where: { order: { $lt: text.order } },
           attributes: ['title', 'order'],
           order: [
             ['order', 'DESC']
           ],
-          required: false
+          required: false,
+          // Retrieve only textProjects belongings to the text-project pair
+          // We use this to calculate the status
+          include: [{
+            model: models.textProject,
+            where: { projectId: projectId },
+            attributes: ['order'],
+            required: false // Awesome !
+            // If true, remove instance that do not satisfy the criteria
+          }]
         }]
       });
     });

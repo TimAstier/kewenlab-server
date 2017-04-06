@@ -22,7 +22,7 @@ function getChars(request, response, next) {
 }
 
 function getWords(request, response, next) {
-  TextWordsGetter(request.params.id)
+  TextWordsGetter(request.params.id, request.params.projectId)
     .then(words => response.status(200).json({ words }))
     .catch(next);
 }
@@ -60,7 +60,7 @@ function getSuggestions(request, result, next) {
 module.exports = app => {
   app.get('/api/texts/:id', authenticate, get);
   app.get('/api/texts/:id/chars/:projectId', authenticate, getChars);
-  app.get('/api/texts/:id/words', authenticate, getWords);
+  app.get('/api/texts/:id/words/:projectId', authenticate, getWords);
   app.put('/api/texts/:id', authenticate, update);
   app.post('/api/texts', authenticate, create);
   app.put('/api/texts/:id/chars', authenticate, updateChars);
