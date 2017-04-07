@@ -8,7 +8,7 @@ import fs from 'fs';
 import path from 'path';
 
 module.exports = app => {
-  fs.readdirSync('./src/routes').forEach(file => {
+  fs.readdirSync('./routes').forEach(file => {
     // Avoid to read this current file and hidden files.
     if (file[0] === '.' || file === path.basename(__filename)) {
       return;

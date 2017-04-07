@@ -3,16 +3,16 @@
   "version": "1.0.0",
   "description": "A server for the Kewen Lab application.",
   "author": "",
-  "main": "src/index.js",
+  "main": "app.js",
   "private": true,
   "scripts": {
     "start": "node build",
-    "dev": "nodemon scripts/start.js -L --watch 'src/**/*' --ext 'js'",
-    "build": "babel src -s -D -d build --presets es2015,stage-0",
+    "dev": "nodemon scripts/start.js -L --watch '**/*' --ext 'js'",
+    "build": "babel . --ignore node_modules,tests -s -D -d build --presets latest",
     "prestart": "npm run -s build",
     "lint": "eslint *.js .; exit 0",
     "lint:watch": "watch 'npm run lint'",
-    "test": "watch ./node_modules/mocha/bin/mocha /src/tests/** --timeout 8000"
+    "test": "watch ./node_modules/mocha/bin/mocha /tests/** --timeout 8000"
   },
   "keywords": [],
   "license": "ISC",
@@ -20,11 +20,9 @@
     "node": "7.3.0"
   },
   "devDependencies": {
-    "babel-cli": "^6.9.0",
-    "babel-core": "^6.9.0",
+    "babel-cli": "^6.24.1",
     "babel-eslint": "^7.2.1",
-    "babel-preset-es2015": "^6.9.0",
-    "babel-preset-stage-0": "^6.5.0",
+    "babel-preset-latest": "^6.24.1",
     "chai": "^3.5.0",
     "eslint": "^3.1.1",
     "eslint-plugin-react": "^6.10.3",
@@ -33,10 +31,6 @@
   },
   "dependencies": {
     "axios": "^0.15.3",
-    "babel": "^6.5.2",
-    "babel-cli": "^6.22.2",
-    "babel-preset-es2015": "^6.18.0",
-    "babel-preset-stage-0": "^6.22.0",
     "bcrypt": "^1.0.2",
     "body-parser": "^1.15.2",
     "cors": "^2.8.1",
