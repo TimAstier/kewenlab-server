@@ -7,7 +7,9 @@ import { sequelize } from './models';
 
 const app = express();
 
-app.use(bodyParser.json());
+// TODO: Only allow JSON, see Forest example
+app.use(bodyParser.json({limit: '5mb'}));
+app.use(bodyParser.urlencoded({limit: '5mb', extended: true}));
 
 // Forest Admin setup
 app.use(require('forest-express-sequelize').init({

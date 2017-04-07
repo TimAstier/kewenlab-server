@@ -1,6 +1,6 @@
 import models from '../models';
 
-export default function TextCreator(projectId) {
+export default function TextCreator(projectId, userId) {
   // find max order of texts in this project
   return models.textProject
     .max('order', { where: { projectId } })
@@ -10,7 +10,7 @@ export default function TextCreator(projectId) {
         order = 0;
       }
       return models.text
-        .create({ title: `New Text #${order + 1}` })
+        .create({ title: `New Text #${order + 1}`, userId })
         .then(text => {
           if (text) {
             return models.textProject
