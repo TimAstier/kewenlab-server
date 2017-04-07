@@ -1,7 +1,7 @@
 {
   "name": "kewen-lab-server",
   "version": "1.0.0",
-  "description": "A server for the Kewen Lab application.",
+  "description": "A server for the KewenLab application.",
   "author": "",
   "main": "app.js",
   "private": true,

@@ -55,11 +55,7 @@ heroku pg:psql --remote production // production
 ```
 
 ## Environment variables
-- DATABASE_URL=
-- FOREST_ENV_SECRET=
-- FOREST_AUTH_SECRET=
-- JWT_SECRET=
-- CLIENT_URL=
+See .env.example file.
 
 ## Environments
 - development - http://localhost:8080
