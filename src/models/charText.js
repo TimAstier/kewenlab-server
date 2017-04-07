@@ -5,18 +5,8 @@ export default (sequelize, DataTypes) => {
     charId: { type: DataTypes.INTEGER },
     textId: { type: DataTypes.INTEGER },
     order: { type: DataTypes.INTEGER },
-    // The following constraints are important
-    // Removing them creates a bug when saving items with an important DB
-    manuallyAdded: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-      defaultValue: true
-    },
-    manuallyDeleted: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-      defaultValue: false
-    }
+    manuallyAdded: { type: DataTypes.BOOLEAN, defaultValue: true },
+    manuallyDeleted: { type: DataTypes.BOOLEAN, defaultValue: false }
   }, {
     classMethods: {
       associate: () => {

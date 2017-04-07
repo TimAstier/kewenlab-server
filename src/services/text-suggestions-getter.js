@@ -3,7 +3,7 @@ import models from '../models';
 import * as wordsUtils from '../utils/wordsUtils';
 import isEmpty from 'lodash/isEmpty';
 
-export default function TextSuggestionsGetter(textId, userId) {
+export default function TextSuggestionsGetter(textId, userId, projectId) {
   const suggestedChars = [];
   let suggestedWords = [];
 
@@ -19,14 +19,22 @@ export default function TextSuggestionsGetter(textId, userId) {
     // https://github.com/sequelize/sequelize/pull/4860
     if (isEmpty(hidden_words)) { hidden_words = [0]; }
     return models.text.findOne({
-      where: { id: textId }
+      where: { id: textId },
+      include: [{
+        model: models.textProject,
+        where: [{ textId }, { projectId }]
+      }]
     }).then((text) => {
-      // Find all the previously used chars until this text (included)
+      const order = text.textProjects[0].order;
+      // Find previously used chars until this text (included) in this project
       return models.char.findAll({
         attributes: ['id'],
         include: [{
           model: models.text,
-          where: { order: { $lte: text.order } }
+          include: [{
+            model: models.textProject,
+            where: [{ order: { $lte: order } }, { projectId }]
+          }]
         }]
       }).then((chars) => {
         // Find all the words ...

@@ -4,6 +4,6 @@ export default function TextGetter(id) {
   return models.text
     .findOne({
       where: { id },
-      attributes: ['id', 'title', 'content', 'order']
+      attributes: ['id', 'title', 'content']
     });
 }

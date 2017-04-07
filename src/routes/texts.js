@@ -5,7 +5,6 @@ import TextWordsGetter from '../services/text-words-getter';
 import TextCreator from '../services/text-creator';
 import TextContentUpdater from '../services/text-content-updater';
 import TextGetter from '../services/text-getter';
-import TextsGetter from '../services/texts-getter';
 import TextCharsUpdater from '../services/textChars-updater';
 import TextWordsUpdater from '../services/textWords-updater';
 import TextSuggestionsGetter from '../services/text-suggestions-getter';
@@ -16,20 +15,14 @@ function get(request, response, next) {
     .catch(next);
 }
 
-function getAll(request, response, next) {
-  TextsGetter()
-    .then(texts => response.json({ texts }))
-    .catch(next);
-}
-
 function getChars(request, response, next) {
-  TextCharsGetter(request.params.id)
+  TextCharsGetter(request.params.id, request.params.projectId)
     .then(chars => response.status(200).json({ chars }))
     .catch(next);
 }
 
 function getWords(request, response, next) {
-  TextWordsGetter(request.params.id)
+  TextWordsGetter(request.params.id, request.params.projectId)
     .then(words => response.status(200).json({ words }))
     .catch(next);
 }
@@ -41,7 +34,7 @@ function update(request, response, next) {
 }
 
 function create(request, response, next) {
-  TextCreator()
+  TextCreator(request.body.projectId, request.body.userId)
     .then(text => response.status(201).json({ text }))
     .catch(next);
 }
@@ -59,19 +52,19 @@ function updateWords(request, result, next) {
 }
 
 function getSuggestions(request, result, next) {
-  TextSuggestionsGetter(request.params.id, request.params.userId)
+  const { id, userId, projectId } = request.params;
+  TextSuggestionsGetter(id, userId, projectId)
     .then(suggestions => result.status(200).json(suggestions))
     .catch(next);
 }
 
 module.exports = app => {
   app.get('/api/texts/:id', authenticate, get);
-  app.get('/api/texts', authenticate, getAll);
-  app.get('/api/texts/:id/chars', authenticate, getChars);
-  app.get('/api/texts/:id/words', authenticate, getWords);
+  app.get('/api/texts/:id/chars/:projectId', authenticate, getChars);
+  app.get('/api/texts/:id/words/:projectId', authenticate, getWords);
   app.put('/api/texts/:id', authenticate, update);
   app.post('/api/texts', authenticate, create);
   app.put('/api/texts/:id/chars', authenticate, updateChars);
   app.put('/api/texts/:id/words', authenticate, updateWords);
-  app.get('/api/texts/:id/suggestions/:number/:userId', authenticate, getSuggestions);
+  app.get('/api/texts/:id/suggestions/:number/:userId/:projectId', authenticate, getSuggestions);
 };

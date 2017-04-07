@@ -1,4 +1,6 @@
 export default (sequelize, DataTypes) => {
+  const models = sequelize.models;
+
   const User = sequelize.define('user', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     username: { type: DataTypes.STRING },
@@ -10,6 +12,8 @@ export default (sequelize, DataTypes) => {
   }, {
     classMethods: {
       associate: () => {
+        User.hasMany(models.text);
+        User.hasMany(models.project);
       }
     },
     instanceMethods: {
