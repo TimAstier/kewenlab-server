@@ -4,8 +4,7 @@ export default (sequelize, DataTypes) => {
   const Text = sequelize.define('text', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     title: { type: DataTypes.STRING },
-    content: { type: DataTypes.TEXT, defaultValue: '' },
-    order: { type: DataTypes.INTEGER }
+    content: { type: DataTypes.TEXT, defaultValue: '' }
   }, {
     classMethods: {
       associate: () => {
