@@ -52,7 +52,8 @@ function updateWords(request, result, next) {
 }
 
 function getSuggestions(request, result, next) {
-  TextSuggestionsGetter(request.params.id, request.params.userId)
+  const { id, userId, projectId } = request.params;
+  TextSuggestionsGetter(id, userId, projectId)
     .then(suggestions => result.status(200).json(suggestions))
     .catch(next);
 }
@@ -65,5 +66,6 @@ module.exports = app => {
   app.post('/api/texts', authenticate, create);
   app.put('/api/texts/:id/chars', authenticate, updateChars);
   app.put('/api/texts/:id/words', authenticate, updateWords);
-  app.get('/api/texts/:id/suggestions/:number/:userId', authenticate, getSuggestions);
+  app.get('/api/texts/:id/suggestions/:number/:userId/:projectId', getSuggestions);
+  // app.get('/api/texts/:id/suggestions/:number/:userId', authenticate, getSuggestions);
 };
