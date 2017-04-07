@@ -34,7 +34,7 @@ function update(request, response, next) {
 }
 
 function create(request, response, next) {
-  TextCreator()
+  TextCreator(request.body.projectId)
     .then(text => response.status(201).json({ text }))
     .catch(next);
 }
@@ -66,6 +66,5 @@ module.exports = app => {
   app.post('/api/texts', authenticate, create);
   app.put('/api/texts/:id/chars', authenticate, updateChars);
   app.put('/api/texts/:id/words', authenticate, updateWords);
-  app.get('/api/texts/:id/suggestions/:number/:userId/:projectId', getSuggestions);
-  // app.get('/api/texts/:id/suggestions/:number/:userId', authenticate, getSuggestions);
+  app.get('/api/texts/:id/suggestions/:number/:userId/:projectId', authenticate, getSuggestions);
 };
