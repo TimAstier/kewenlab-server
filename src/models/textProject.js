@@ -4,7 +4,7 @@ export default (sequelize, DataTypes) => {
   const TextProject = sequelize.define('textProject', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     originProject: { type: DataTypes.INTEGER },
-    order: { type: DataTypes.INTEGER }
+    order: { type: DataTypes.INTEGER, defaultValue: 1 }
   }, {
     classMethods: {
       associate: () => {

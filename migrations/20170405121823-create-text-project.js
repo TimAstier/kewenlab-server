@@ -24,7 +24,7 @@ module.exports = {
         onDelete: 'cascade'
       },
       originProject: { type: Sequelize.INTEGER },
-      order: { type: Sequelize.INTEGER },
+      order: { type: Sequelize.INTEGER, allowNull: false, defaultValue: 1 },
       createdAt: { type: Sequelize.DATE, allowNull: false, defaultValue: Sequelize.fn('NOW') },
       updatedAt: { type: Sequelize.DATE, allowNull: false, defaultValue: Sequelize.fn('NOW') }
     });
