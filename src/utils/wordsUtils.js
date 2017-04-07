@@ -15,14 +15,18 @@ export function filterFullyMatchingWords(words) {
   });
 }
 
-export function filterNonUsedWords(words, textOrder) {
-  // Filter out words having a text with order $lte text.order
-  return words.filter(w => {
+export function filterNonUsedWords(words, textOrder, projectId) {
+  // Filter out words...
+    // having a text with order $lte textOrder AND
+    // belonging to this project
+  return words.filter(word => {
     let keep = true;
-    w.texts.forEach(t => {
-      if (t.order <= textOrder) {
-        keep = false;
-      }
+    word.texts.forEach(text => {
+      text.textProjects.forEach(textProject => {
+        if (textProject.order <= textOrder && textProject.projectId === Number(projectId)) {
+          keep = false;
+        }
+      });
     });
     return keep;
   });

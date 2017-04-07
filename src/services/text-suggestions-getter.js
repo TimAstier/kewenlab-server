@@ -59,12 +59,17 @@ export default function TextSuggestionsGetter(textId, userId, projectId) {
             model: models.char,
             where: { id: { $in: usedChars } }
           }, {
-            model: models.text
+            model: models.text,
+            attributes: ['id'],
+            include: [{
+              model: models.textProject,
+              attributes: ['projectId', 'order']
+            }]
           }]
         })
         .then((words) => {
           let filteredWords = wordsUtils.filterFullyMatchingWords(words);
-          filteredWords = wordsUtils.filterNonUsedWords(filteredWords, text.order);
+          filteredWords = wordsUtils.filterNonUsedWords(filteredWords, order, projectId);
           filteredWords = wordsUtils.orderByFrequency(filteredWords);
           // Send back an array of Chinese words, Ids and favorite info
           suggestedWords = filteredWords.map(w => {
