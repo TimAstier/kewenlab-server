@@ -35,7 +35,7 @@ function update(request, response, next) {
 
 function create(request, response, next) {
   TextCreator(request.body.projectId, request.body.userId)
-    .then(text => response.status(201).json({ text }))
+    .then(() => response.status(201).json(request.body.projectId))
     .catch(next);
 }
 
