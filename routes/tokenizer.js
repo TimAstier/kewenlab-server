@@ -3,7 +3,7 @@ import nodejieba from 'nodejieba';
 
 function tokenize(request, result, next) {
   try {
-    result.send(nodejieba.crut(request.body.content));
+    result.send(nodejieba.cut(request.body.content));
   } catch (err) {
     throw { status: 500, message: 'Could not tokenize text' };
   }
