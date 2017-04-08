@@ -17,4 +17,8 @@ module.exports = app => {
     // Load the route file.
     require('./' + file)(app);
   });
+
+  app.get('/', (req, res) => {
+    res.send('Hello from KewenLab');
+  });
 };
