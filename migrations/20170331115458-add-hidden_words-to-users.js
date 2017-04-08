@@ -1,4 +1,3 @@
-/* eslint-disable func-names*/
 'use strict';
 
 module.exports = {
