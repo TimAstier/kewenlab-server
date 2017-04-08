@@ -4,6 +4,6 @@ export default function TextContentUpdater(textId, content) {
   return models.text
     .update(
       { content },
-      { where: { id: textId } }
+      { where: { id: textId }, returning: true }
     );
 }

@@ -29,7 +29,7 @@ function getWords(request, response, next) {
 
 function update(request, response, next) {
   TextContentUpdater(request.params.id, request.body.content)
-    .then(() => response.status(200).json({ success: true }))
+    .then(affected => response.status(200).json({ affected }))
     .catch(next);
 }
 
