@@ -1,4 +1,4 @@
-import config from './config/config'; // eslint-disable-line no-unused-vars
+import config from './config'; // eslint-disable-line no-unused-vars
 
 import express from 'express';
 import bodyParser from 'body-parser';
