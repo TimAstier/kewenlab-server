@@ -18,7 +18,7 @@ export default function TextCharsGetter(textId, projectId) {
              // This is an example of filter via join table
              // See infos on stackoverflow: http://bit.ly/2jYCzd9
              through: { where: { manuallyDeleted: false } },
-             attributes: ['id'],
+             attributes: ['id', 'title'],
              required: false,
              // To calculate the status, require only texts with textProjects
              // from the same project and with order $lte current order.

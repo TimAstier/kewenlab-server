@@ -16,7 +16,7 @@ export default function TextWordsGetter(textId, projectId) {
              // Avoid taking texts on which the item was manuallyDeleted
              // This allow to correctly calculate origin status
              through: { where: { manuallyDeleted: false } },
-             attributes: ['id'],
+             attributes: ['id', 'title'],
              required: false,
              // To calculate the status, require only texts with textProjects
              // from the same project and with order $lte current order.
