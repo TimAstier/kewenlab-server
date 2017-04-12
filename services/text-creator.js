@@ -10,7 +10,7 @@ export default function TextCreator(projectId, userId) {
         order = 0;
       }
       return models.text
-        .create({ title: `New Text #${order + 1}`, userId })
+        .create({ title: 'New text', userId })
         .then(text => {
           if (text) {
             return models.textProject
