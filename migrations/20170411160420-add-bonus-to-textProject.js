@@ -10,6 +10,6 @@ module.exports = {
   },
 
   down: function (queryInterface) {
-    return queryInterface.removeColumn('textProjects', bonus);
+    return queryInterface.removeColumn('textProjects', 'bonus');
   }
 };

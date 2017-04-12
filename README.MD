@@ -22,7 +22,7 @@ Restore Heroku dump in local DB:
 ```
 // If starting from existing DB
 $ sequelize db:migrate:undo:all
-$ pg_restore --verbose --clean --no-acl --no-owner -h localhost -U username -d dbname latest.dump
+$ pg_restore --verbose --clean --no-acl --no-owner -h localhost -U timotheeastier -d kewen-lab latest.dump
 ```
 
 ## Database seed for chars and words
