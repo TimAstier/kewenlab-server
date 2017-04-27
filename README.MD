@@ -18,11 +18,17 @@ heroku addons:create heroku-postgresql:hobby-dev --remote production
 
 ## Database
 Daily backups are scheduled in staging and prod at 02:00 America/Los_Angeles.
-Restore Heroku dump in local DB:
+
+Restore dump in local DB:
 ```
 // If starting from existing DB
 $ sequelize db:migrate:undo:all
 $ pg_restore --verbose --clean --no-acl --no-owner -h localhost -U timotheeastier -d kewen-lab latest.dump
+```
+
+Restore dump in Heroku App:
+```
+$ heroku pg:backups:restore 'https://s3.amazonaws.com/me/items/3H0q/mydb.dump' DATABASE_URL --remote production
 ```
 
 ## Database seed for chars and words
