@@ -8,7 +8,7 @@ export default (sequelize, DataTypes) => {
     classMethods: {
       associate: () => {
         Project.belongsTo(models.user);
-        Project.belongsToMany(models.text, { through: 'textProject' });
+        Project.belongsToMany(models.text, { through: 'textProject', onDelete: 'cascade', hooks: true });
         Project.hasMany(models.textProject, { onDelete: 'cascade', hooks: true });
       }
     }

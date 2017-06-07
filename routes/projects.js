@@ -4,7 +4,6 @@ import ProjectTextsGetter from '../services/project-texts-getter';
 import ProjectTextsUpdater from '../services/project-texts-updater';
 const ProjectSerializer = require('../serializers/project');
 
-
 function list(request, response, next) {
   ProjectsGetter(request.params.userId)
     .then(projects => {
