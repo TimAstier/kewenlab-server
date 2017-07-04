@@ -19,6 +19,13 @@ heroku addons:create heroku-postgresql:hobby-dev --remote production
 ## Database
 Daily backups are scheduled in staging and prod at 02:00 America/Los_Angeles.
 
+Before every save of text content, the current content is displayed in the growser logs and in the server logs.
+To see logs on the server:
+
+```
+heroku logs [--tail] --source app --remote production
+```
+
 Restore dump in local DB:
 ```
 // If starting from existing DB
