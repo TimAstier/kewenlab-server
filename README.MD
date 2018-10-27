@@ -1,44 +1,55 @@
 # Kewen-lab-server
-The application is built with express.  
-It is based on the [Express & ES6 REST API Boilerplate](https://github.com/developit/express-es6-rest-api).
+
+A tool to create and manage content for the ChineseMe course.
+
+## No longer maintained
+
+_This tool is no longer maintained nor available online. This repository is published here as a reference._
 
 ## Development
-```
+
+```bash
 $ npm install
 $ npm run dev
 ```
 
 ## Deployment
+
 The app is deployed to Heroku.
-```
-heroku create kewen-lab-server --remote production
-git push production master
-heroku addons:create heroku-postgresql:hobby-dev --remote production
+
+```bash
+$ heroku create kewen-lab-server --remote production
+$ git push production master
+$ heroku addons:create heroku-postgresql:hobby-dev --remote production
 ```
 
 ## Database
+
 Daily backups are scheduled in staging and prod at 02:00 America/Los_Angeles.
 
 Before every save of text content, the current content is displayed in the growser logs and in the server logs.
 To see logs on the server:
 
 ```
-heroku logs [--tail] --source app --remote production
+$ heroku logs [--tail] --source app --remote production
 ```
 
 Restore dump in local DB:
-```
-// If starting from existing DB
+
+```bash
+# If starting from existing DB
 $ sequelize db:migrate:undo:all
 $ pg_restore --verbose --clean --no-acl --no-owner -h localhost -U timotheeastier -d kewen-lab latest.dump
 ```
 
 Restore dump in Heroku App:
+
 ```
-$ heroku pg:backups:restore 'https://s3.amazonaws.com/me/items/3H0q/mydb.dump' DATABASE_URL --remote production
+$ heroku pg:backups:restore 'https://s3.amazonaws.com/me/items/XXXX/mydb.dump' DATABASE_URL --remote production
 ```
 
 ## Database seed for chars and words
+
 ```js
 /** connect to DB **/
 psql -p5432 -d 'kewen-lab' // development
@@ -68,9 +79,11 @@ heroku pg:psql --remote production // production
 ```
 
 ## Environment variables
+
 See .env.example file.
 
 ## Environments
+
 - development - http://localhost:8080
 - staging - https://damp-shelf-57274.herokuapp.com
 - production - https://kewen-lab-server.herokuapp.com

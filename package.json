@@ -2,9 +2,13 @@
   "name": "kewen-lab-server",
   "version": "1.0.0",
   "description": "A server for the KewenLab application.",
-  "author": "",
+  "author": {
+    "name": "Timothée Astier",
+    "url": "https://github.com/TimAstier"
+  },
+  "license": "GPL-3.0",
+  "private": false,
   "main": "app.js",
-  "private": true,
   "scripts": {
     "start": "node build",
     "dev": "nodemon scripts/start.js -L --watch '**/*' --ext 'js'",
@@ -15,7 +19,6 @@
     "test": "watch ./node_modules/mocha/bin/mocha /tests/** --timeout 8000"
   },
   "keywords": [],
-  "license": "ISC",
   "engines": {
     "node": "7.3.0"
   },

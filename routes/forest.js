@@ -51,6 +51,7 @@ function cloneProject(request, response, next) {
       // Create project
       return ProjectCreator(toClone.title)
         .then((project) => {
+          console.log('project created')
           // Create texts
           const textsToCreate = toClone.texts.map(t => {
             return {
@@ -61,6 +62,7 @@ function cloneProject(request, response, next) {
           return models.text
           .bulkCreate(textsToCreate, { returning: true })
           .then(createdTexts => {
+            console.log('texts created')
             // Retrieve ids of newley created texts
             const newTextIds = createdTexts.map(t => t.id);
             // Create charTexts
@@ -75,6 +77,7 @@ function cloneProject(request, response, next) {
             });
             return models.charText.bulkCreate(charTextsToCreate)
               .then(() => {
+                console.log('charTexts created')
                 // Create wordTexts
                 const wordTextsToCreate = toClone.wordTexts.map(w => {
                   return {
@@ -87,6 +90,7 @@ function cloneProject(request, response, next) {
                 });
                 return models.wordText.bulkCreate(wordTextsToCreate)
                   .then(() => {
+                    console.log('wordtexts created')
                     const textProjectsToCreate = toClone.textProjects.map(t => {
                       return {
                         projectId: project.id,
@@ -98,6 +102,7 @@ function cloneProject(request, response, next) {
                     });
                     return models.textProject.bulkCreate(textProjectsToCreate)
                       .then(() => {
+                        console.log('textProjects created')
                         console.log('Project cloned! ids: ' + projectId + ' => ' + project.id); // eslint-disable-line no-console
                         response.send({ success: 'Project successfuly cloned.' });
                       });
